@@ -1,0 +1,16 @@
+﻿Version 0.5:
+- Add a menu
+- Add an AboutBox
+
+Version 0.4: 
+- Finally use the proper method of inserting app in ClipBoard's viewers chain !
+
+Version 0.3:
+- Use a timer to check Clipboard
+- Use CTRL+V to call the app
+
+Version 0.2:
+- Use CTRL+C to call the app
+
+Version 0.1: 
+- Initial release
