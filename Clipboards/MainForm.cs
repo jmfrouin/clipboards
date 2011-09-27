@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows.Forms;
 
 namespace Clipboards
 {
@@ -53,9 +53,9 @@ namespace Clipboards
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
-            //CTRL+D
-            APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), 2, (int)'D');
             RestoreClips();
+            //Register CTRL+SHIFT+D
+            APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), 2, (int)'D');  
         }
 
         private void MainForm_Closed(object sender, System.EventArgs e)
@@ -80,6 +80,7 @@ namespace Clipboards
 
                     ClipItem Item = new ClipItem(p.MainModule.FileName);
                     Item.Content = iData.GetData(DataFormats.StringFormat).ToString();
+                    Item.Type = ClipItem.EType.eText;
                     fClips.Add(Item);
 
                     listBoxClips.Items.Add(fClips.Count.ToString());
@@ -94,6 +95,7 @@ namespace Clipboards
 
                     ClipItem Item = new ClipItem(p.MainModule.FileName);
                     Item.Image = (Bitmap)iData.GetData(DataFormats.Bitmap);
+                    Item.Type = ClipItem.EType.eImage;
                     fClips.Add(Item);
 
                     listBoxClips.Items.Add(fClips.Count.ToString());
@@ -113,13 +115,13 @@ namespace Clipboards
 
         private void DrawItem(object sender, DrawItemEventArgs e)
         {
-            Graphics g = e.Graphics;
-            if (e.Index != -1)
+            if (e.Index != -1 && e.Index < fClips.Count)
             {
+                Graphics g = e.Graphics;
                 ClipItem Clip = fClips[e.Index];
                 Clip.Draw(g, e.Bounds, e.State, e.Font);
+                g.Dispose();
             }
-            g.Dispose();
         }
         #endregion
 
@@ -213,14 +215,17 @@ namespace Clipboards
                 {
                     BinaryFormatter bin = new BinaryFormatter();
                     fClips = (List<ClipItem>)bin.Deserialize(stream);
+                    int Count = 0;
+                    listBoxClips.Items.Clear();
                     foreach (ClipItem Item in fClips)
                     {
-                        listBoxClips.Items.Add("Clip!");
+                        listBoxClips.Items.Add((Count++).ToString());
                     }
                 }
             }
-            catch (IOException)
+            catch (IOException e)
             {
+                Console.WriteLine("!!! Exception caught here" + e.ToString());
             }
         }
         #endregion
