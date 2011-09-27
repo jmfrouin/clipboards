@@ -37,13 +37,6 @@ namespace Clipboards
             int TaskbarH = Screen.PrimaryScreen.Bounds.Bottom - Screen.PrimaryScreen.WorkingArea.Bottom;
             this.Location = new Point(ScreenW - AppW, ScreenH - AppH - TaskbarH);
 
-            //Folders
-            if (System.IO.Directory.Exists(@"Clips"))
-            {
-                System.IO.Directory.Delete(@"Clips", true);
-            }
-            System.IO.Directory.CreateDirectory(@"Clips");
-
             RegisterClipboardViewer();
         }
 

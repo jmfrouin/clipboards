@@ -119,7 +119,13 @@ namespace Clipboards
             }
             g.FillRectangle(myBrush, borderRect);
             g.DrawRectangle(Pens.Black, borderRect);
-            
+
+            //Prepare timestamp
+            Brush tsBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
+            Rectangle tsRect = bounds;
+            tsRect.X = bounds.X + 4 + (bounds.Height < 36 ? 16 : 32);
+            tsRect.Y = bounds.Y + 2;
+
             //Draw text I/A
             if (fContent != string.Empty)
             {
@@ -127,6 +133,7 @@ namespace Clipboards
                 Rectangle textRect = bounds;
                 textRect.X = bounds.X + 4 + (bounds.Height < 36 ? 16 : 32);
                 textRect.Y = bounds.Y + 2;
+                tsRect.Y += textRect.Height;
                 g.DrawString(fContent, font, textBrush, textRect);
             }
 
@@ -139,14 +146,10 @@ namespace Clipboards
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.DrawImage(fImage, imageRect);
                 g.DrawRectangle(Pens.Black, imageRect);
-
-                //Timestamp
-                Brush textBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
-                Rectangle textRect = bounds;
-                textRect.X = bounds.X + 4 + (bounds.Height < 36 ? 16 : 32);
-                textRect.Y = bounds.Y + 2;
-                g.DrawString(fTimeStamp.ToString(), font, textBrush, textRect);
             }
+
+            //Draw the timestamp
+            g.DrawString(fTimeStamp.ToString(), font, tsBrush, tsRect);
 
             //Draw the application icon  ! 
             if (fOrigProgLargeIcon != null && bounds.Height > 36)
