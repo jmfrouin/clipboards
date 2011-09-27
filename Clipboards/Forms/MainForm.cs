@@ -177,7 +177,7 @@ namespace Clipboards
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AboutBox aBox = new AboutBox();
-            aBox.Show();
+            aBox.ShowDialog();
         }
 
         private void toolStripDelete_Click(object sender, EventArgs e)
@@ -229,6 +229,45 @@ namespace Clipboards
             }
         }
         #endregion
-        
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void toolStripUp_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripDown_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBoxClips_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char c = e.KeyChar;
+            if (c == 13)
+            {
+                int Index = listBoxClips.SelectedIndex;
+                ClipItem Clip = fClips[Index];
+                switch (Clip.Type)
+                {
+                    case ClipItem.EType.eText:
+                        {
+                            Clipboard.SetText(Clip.Content);
+                            break;
+                        }
+                    case ClipItem.EType.eImage:
+                        {
+                            Clipboard.SetImage(Clip.Image);
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
+        }
     }
 }
