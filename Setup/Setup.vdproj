@@ -171,7 +171,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Clipboards"
         "ProductCode" = "8:{6C005C8E-CF0E-4A29-985F-7902795230E4}"
-        "PackageCode" = "8:{F9D0E529-3645-49AD-A4E1-0CF6F3273C4B}"
+        "PackageCode" = "8:{2D55B6CD-6236-467E-B060-87BB80A79C33}"
         "UpgradeCode" = "8:{4ECB3B6F-BD7A-41D8-9688-CB0ECD4964D9}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -720,7 +720,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A403FC925FBA46EBA78B11BA10625B68"
             {
-            "SourcePath" = "8:"
+            "SourcePath" = "8:..\\Clipboards\\obj\\Debug\\Clipboards.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A0E2EE7812D74F4DB60B5457F4BA52D4"

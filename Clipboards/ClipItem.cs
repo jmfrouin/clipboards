@@ -65,7 +65,7 @@ namespace Clipboards
             set { fExePath = value; }
         }
 
-        public DateTime fTime = DateTime.Now;
+        public DateTime fTimeStamp = DateTime.Now;
         #endregion
         
         #region Constructors
@@ -139,6 +139,13 @@ namespace Clipboards
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.DrawImage(fImage, imageRect);
                 g.DrawRectangle(Pens.Black, imageRect);
+
+                //Timestamp
+                Brush textBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
+                Rectangle textRect = bounds;
+                textRect.X = bounds.X + 4 + (bounds.Height < 36 ? 16 : 32);
+                textRect.Y = bounds.Y + 2;
+                g.DrawString(fTimeStamp.ToString(), font, textBrush, textRect);
             }
 
             //Draw the application icon  ! 
