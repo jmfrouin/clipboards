@@ -143,14 +143,16 @@ namespace Clipboards
             {
                 case Clipboards.APIFuncs.Msgs.WM_HOTKEY:
                 {
-                    InsertClip();
                     this.Activate();
                     break;
                 }
                 case Clipboards.APIFuncs.Msgs.WM_DRAWCLIPBOARD:
                 {
+                    System.IntPtr handle = APIFuncs.GetClipboardOwner();
+                    System.IntPtr myHandle = this.Handle;
                     InsertClip();
-                    APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+                    if (ClipboardViewerNext != System.IntPtr.Zero)
+                        APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
                     break;
                 }
                 case Clipboards.APIFuncs.Msgs.WM_CHANGECBCHAIN:
@@ -161,7 +163,8 @@ namespace Clipboards
                     }
                     else
                     {
-                        APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+                        if (ClipboardViewerNext != System.IntPtr.Zero)
+                            APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
                     }
                     break;
                 }
@@ -256,12 +259,19 @@ namespace Clipboards
                 {
                     case ClipItem.EType.eText:
                         {
-                            Clipboard.SetText(Clip.Content);
+                            DataObject data = new DataObject();
+                            Clip.Content.Insert(0, "POP");
+                            data.SetData(DataFormats.Text, Clip.Content);
+                            Clipboard.Clear();
+                            Clipboard.SetDataObject(data);
                             break;
                         }
                     case ClipItem.EType.eImage:
                         {
-                            Clipboard.SetImage(Clip.Image);
+                            DataObject data = new DataObject();
+                            data.SetData(DataFormats.Bitmap, Clip.Image);
+                            Clipboard.Clear();
+                            Clipboard.SetDataObject(data);
                             break;
                         }
                     default:

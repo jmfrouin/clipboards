@@ -187,14 +187,22 @@ namespace Clipboards
             tsRect.Width += 1;
             g.DrawString(fTimeStamp.ToLongDateString(), font, tsBrush, tsRect);
             tsX += (int)fTimeStampSize.Width + 4;
-            tsRect.X = tsX;
+            if (fImage != null)
+            {
+                tsRect.Y += tsRect.Height;
+            }
+            else
+            {
+                tsRect.X = tsX;
+            }
+            
             g.DrawString(fTimeStamp.ToLongTimeString(), font, tsBrush, tsRect);
 
             //Draw the application icon  ! 
             if (fOrigProgLargeIcon != null && bounds.Height > 36)
             {
                 int X = bounds.Width - 2 - fOrigProgLargeIcon.Width;
-                g.DrawImage(fOrigProgLargeIcon, bounds.X + 2, origY);
+                g.DrawImage(fOrigProgLargeIcon, bounds.X + 2, bounds.Y + 2);
             }
             else 
             {
