@@ -14,13 +14,19 @@ namespace Clipboards
         //Used when registering/unregistering the clipboard viewer!
         private IntPtr ClipboardViewerNext;
 
-        //List of Clips
+        //Liste de Clips
         List<ClipItem> fClips = new List<ClipItem>();
+
+        //Pour gérer le cas où Clipboards, lui même, push quelque chose dans le ClipBoard system.
+        private bool fLocalCopy;
+        private bool fCallFromHotkey;
         #endregion
 
         public MainForm()
         {
             InitializeComponent();
+            fLocalCopy = false;
+            fCallFromHotkey = false;
 
             //Callbacks
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -55,7 +61,8 @@ namespace Clipboards
         {
             RestoreClips();
             //Register CTRL+SHIFT+D
-            APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), 2, (int)'D');  
+            //http://msdn.microsoft.com/en-us/library/windows/desktop/ms646279(v=vs.85).aspx
+            APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), 0x2, (int)'E');
         }
 
         private void MainForm_Closed(object sender, System.EventArgs e)
@@ -81,9 +88,15 @@ namespace Clipboards
                     ClipItem Item = new ClipItem(p.MainModule.FileName);
                     Item.Content = iData.GetData(DataFormats.StringFormat).ToString();
                     Item.Type = ClipItem.EType.eText;
-                    fClips.Add(Item);
-
-                    listBoxClips.Items.Add(fClips.Count.ToString());
+                    if (fLocalCopy == false)
+                    {
+                        fClips.Add(Item);
+                        listBoxClips.Items.Add(fClips.Count.ToString());
+                    }
+                    else 
+                    {
+                        fLocalCopy = false;
+                    }
                 }
 
                 //Handle Bitmap element
@@ -96,9 +109,15 @@ namespace Clipboards
                     ClipItem Item = new ClipItem(p.MainModule.FileName);
                     Item.Image = (Bitmap)iData.GetData(DataFormats.Bitmap);
                     Item.Type = ClipItem.EType.eImage;
-                    fClips.Add(Item);
-
-                    listBoxClips.Items.Add(fClips.Count.ToString());
+                    if (fLocalCopy == false)
+                    {
+                        fClips.Add(Item);
+                        listBoxClips.Items.Add(fClips.Count.ToString());
+                    }
+                    else
+                    {
+                        fLocalCopy = false;
+                    }
                 }
             }
         }
@@ -143,13 +162,13 @@ namespace Clipboards
             {
                 case Clipboards.APIFuncs.Msgs.WM_HOTKEY:
                 {
+                    this.Show();
                     this.Activate();
+                    fCallFromHotkey = true;
                     break;
                 }
                 case Clipboards.APIFuncs.Msgs.WM_DRAWCLIPBOARD:
                 {
-                    System.IntPtr handle = APIFuncs.GetClipboardOwner();
-                    System.IntPtr myHandle = this.Handle;
                     InsertClip();
                     if (ClipboardViewerNext != System.IntPtr.Zero)
                         APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
@@ -259,19 +278,32 @@ namespace Clipboards
                 {
                     case ClipItem.EType.eText:
                         {
+                            fLocalCopy = true;
                             DataObject data = new DataObject();
-                            Clip.Content.Insert(0, "POP");
                             data.SetData(DataFormats.Text, Clip.Content);
                             Clipboard.Clear();
                             Clipboard.SetDataObject(data);
+                            if (fCallFromHotkey)
+                            {
+                                fCallFromHotkey = false;
+                                this.Hide();
+                                SendKeys.SendWait("^v");
+                            }
                             break;
                         }
                     case ClipItem.EType.eImage:
                         {
+                            fLocalCopy = true;
                             DataObject data = new DataObject();
                             data.SetData(DataFormats.Bitmap, Clip.Image);
                             Clipboard.Clear();
                             Clipboard.SetDataObject(data);
+                            if (fCallFromHotkey)
+                            {
+                                fCallFromHotkey = false;
+                                this.Hide();
+                                SendKeys.SendWait("^v");
+                            }
                             break;
                         }
                     default:
