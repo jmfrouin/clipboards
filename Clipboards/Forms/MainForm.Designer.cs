@@ -207,6 +207,10 @@
             // 
             // trayIcon
             // 
+            this.trayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.trayIcon.BalloonTipText = "Enhanced Clipboard";
+            this.trayIcon.BalloonTipTitle = "Clipboards";
+            this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
             this.trayIcon.Text = "trayIcon";
             this.trayIcon.Visible = true;
             // 

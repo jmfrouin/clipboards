@@ -50,12 +50,14 @@ namespace Clipboards
         #region Callbacks !
         private void MainForm_Activated(object sender, System.EventArgs e)
         {
-            this.Opacity = 1;
+            //this.Opacity = 1;
+            this.Show();
         }
 
         private void MainForm_Deactivate(object sender, System.EventArgs e)
         {
-            this.Opacity = 0.3;
+            //this.Opacity = 0.3;
+            this.Hide();
         }
 
         private void MainForm_Load(object sender, System.EventArgs e)
@@ -219,7 +221,7 @@ namespace Clipboards
         {
             try
             {
-                using (Stream stream = File.Open("Clips.bin", FileMode.Create))
+                using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "Clips.bin", FileMode.Create))
                 {
                     BinaryFormatter bin = new BinaryFormatter();
                     bin.Serialize(stream, fClips);
@@ -234,7 +236,7 @@ namespace Clipboards
         {
             try
             {
-                using (Stream stream = File.Open("Clips.bin", FileMode.Open))
+                using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "Clips.bin", FileMode.Open))
                 {
                     BinaryFormatter bin = new BinaryFormatter();
                     fClips = (List<ClipItem>)bin.Deserialize(stream);

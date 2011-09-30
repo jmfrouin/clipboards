@@ -67,7 +67,8 @@ namespace Clipboards
             set { fExePath = value; }
         }
 
-        private SizeF fTimeStampSize;
+        private SizeF fTimeStampSize1;
+        private SizeF fTimeStampSize2;
         private DateTime fTimeStamp = DateTime.Now;
         #endregion
 
@@ -121,12 +122,13 @@ namespace Clipboards
             {
                 fContentSize = e.Graphics.MeasureString(fContent, font);
                 h += (int)fContentSize.Height + 2;
+                h += (int)fContentSize.Height + 2; //For Misc infos :)
             }
 
             //Timestamp
-            fTimeStampSize = e.Graphics.MeasureString(fTimeStamp.ToLongDateString(), font);
-            h += (int)fTimeStampSize.Height + 2;
-
+            fTimeStampSize1 = e.Graphics.MeasureString(fTimeStamp.ToLongDateString(), font);
+            fTimeStampSize2 = e.Graphics.MeasureString(fTimeStamp.ToLongTimeString(), font);
+            h += (int)fTimeStampSize1.Height + 2;
             h += 2;
 
             //Minimal size for Icon
@@ -183,10 +185,10 @@ namespace Clipboards
             Brush tsBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
             int tsX = bounds.X + 4 + (bounds.Height < 36 ? 16 : 32);
             Point tsOrig = new Point(tsX, origY);
-            Rectangle tsRect = new Rectangle(tsOrig, Size.Truncate(fTimeStampSize));
+            Rectangle tsRect = new Rectangle(tsOrig, Size.Truncate(fTimeStampSize1));
             tsRect.Width += 1;
             g.DrawString(fTimeStamp.ToLongDateString(), font, tsBrush, tsRect);
-            tsX += (int)fTimeStampSize.Width + 4;
+            tsX += (int)fTimeStampSize1.Width + 4;
             if (fImage != null)
             {
                 tsRect.Y += tsRect.Height;
@@ -195,8 +197,14 @@ namespace Clipboards
             {
                 tsRect.X = tsX;
             }
-            
             g.DrawString(fTimeStamp.ToLongTimeString(), font, tsBrush, tsRect);
+            
+            //Draw size infos
+            tsRect.Y += tsRect.Height + 2; ;
+            if (fImage != null)
+                g.DrawString(fImage.Width.ToString() + "x" + fImage.Height.ToString() + "px", font, tsBrush, tsRect);
+            if (fContent != string.Empty)
+                g.DrawString(fContent.Length.ToString() + "char(s).", font, tsBrush, tsRect);
 
             //Draw the application icon  ! 
             if (fOrigProgLargeIcon != null && bounds.Height > 36)
