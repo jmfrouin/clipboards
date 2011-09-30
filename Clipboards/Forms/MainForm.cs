@@ -34,7 +34,7 @@ namespace Clipboards
             this.Activated += new System.EventHandler(this.MainForm_Activated);
             this.Deactivate += new System.EventHandler(this.MainForm_Deactivate);
 
-            //Settings
+            //Settings, to be put, later, in a dedicated DB
             Screen screen = Screen.PrimaryScreen;
             int ScreenW = screen.Bounds.Width;
             int ScreenH = screen.Bounds.Height;
@@ -42,6 +42,7 @@ namespace Clipboards
             int AppH = this.Size.Height;
             int TaskbarH = Screen.PrimaryScreen.Bounds.Bottom - Screen.PrimaryScreen.WorkingArea.Bottom;
             this.Location = new Point(ScreenW - AppW, ScreenH - AppH - TaskbarH);
+            this.ShowInTaskbar = false;
 
             RegisterClipboardViewer();
         }

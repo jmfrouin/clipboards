@@ -11,6 +11,15 @@ namespace Clipboards
     public class APIFuncs
     {
         #region Windows API Functions Declarations
+        private const int SW_HIDE = 0;
+        private const int SW_SHOW = 1;
+
+        //Show / Hide a Window.
+        [DllImport("user32.dll")]
+        private static extern int FindWindow(string className, string windowText);
+        [DllImport("user32.dll")]
+        private static extern int ShowWindow(int hwnd, int command);
+
         //This Function is used to get Active Window Title...
         [DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
         public static extern int GetWindowText(IntPtr hwnd, string lpString, int cch);
