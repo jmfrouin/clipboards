@@ -16,6 +16,8 @@ namespace Clipboards
 
         //Liste de Clips
         List<ClipItem> fClips = new List<ClipItem>();
+        //Liste de Clips Favoris
+        List<ClipItem> fFavorites = new List<ClipItem>();
 
         //Pour gérer le cas où Clipboards, lui même, push quelque chose dans le ClipBoard system.
         private bool fLocalCopy;
@@ -125,7 +127,7 @@ namespace Clipboards
             }
         }
 
-        #region Customized listbox ! 
+        #region Customized listboxes ! 
         private void MeasureItem(object sender, MeasureItemEventArgs e)
         {
             ClipItem Clip = fClips[e.Index];
@@ -141,6 +143,26 @@ namespace Clipboards
             {
                 Graphics g = e.Graphics;
                 ClipItem Clip = fClips[e.Index];
+                Clip.Draw(g, e.Bounds, e.State, e.Font);
+                g.Dispose();
+            }
+        }
+
+        private void FavMeasureItem(object sender, MeasureItemEventArgs e)
+        {
+            ClipItem Clip = fFavorites[e.Index];
+            int W = e.ItemWidth, H = e.ItemHeight;
+            Clip.Measure(e, listBoxFavorites.Font, ref W, ref H);
+            e.ItemWidth = W;
+            e.ItemHeight = H;
+        }
+
+        private void FavDrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index != -1 && e.Index < fClips.Count)
+            {
+                Graphics g = e.Graphics;
+                ClipItem Clip = fFavorites[e.Index];
                 Clip.Draw(g, e.Bounds, e.State, e.Font);
                 g.Dispose();
             }
@@ -221,10 +243,17 @@ namespace Clipboards
         {
             try
             {
+                //Normal
                 using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "Clips.bin", FileMode.Create))
                 {
                     BinaryFormatter bin = new BinaryFormatter();
                     bin.Serialize(stream, fClips);
+                }
+                //Favoris
+                using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "FClips.bin", FileMode.Create))
+                {
+                    BinaryFormatter bin = new BinaryFormatter();
+                    bin.Serialize(stream, fFavorites);
                 }
             }
             catch (IOException)
@@ -236,6 +265,7 @@ namespace Clipboards
         {
             try
             {
+                //Normal
                 using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "Clips.bin", FileMode.Open))
                 {
                     BinaryFormatter bin = new BinaryFormatter();
@@ -245,6 +275,18 @@ namespace Clipboards
                     foreach (ClipItem Item in fClips)
                     {
                         listBoxClips.Items.Add((Count++).ToString());
+                    }
+                }
+                //Favorites
+                using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "FClips.bin", FileMode.Open))
+                {
+                    BinaryFormatter bin = new BinaryFormatter();
+                    fFavorites = (List<ClipItem>)bin.Deserialize(stream);
+                    int Count = 0;
+                    listBoxFavorites.Items.Clear();
+                    foreach (ClipItem Item in fFavorites)
+                    {
+                        listBoxFavorites.Items.Add((Count++).ToString());
                     }
                 }
             }
@@ -262,12 +304,26 @@ namespace Clipboards
 
         private void toolStripUp_Click(object sender, EventArgs e)
         {
-
+            int Index = listBoxClips.SelectedIndex;
+            if (Index > 0)
+            {
+                ClipItem Clip = fClips[Index];
+                fClips.RemoveAt(Index);
+                fClips.Insert(Index - 1, Clip);
+            }
+            listBoxClips.Refresh();
         }
 
         private void toolStripDown_Click(object sender, EventArgs e)
         {
-
+            int Index = listBoxClips.SelectedIndex;
+            if (Index != -1 && Index < (listBoxClips.Items.Count - 1))
+            {
+                ClipItem Clip = fClips[Index];
+                fClips.RemoveAt(Index);
+                fClips.Insert(Index + 1, Clip);
+            }
+            listBoxClips.Refresh();
         }
 
         private void listBoxClips_KeyPress(object sender, KeyPressEventArgs e)
@@ -313,6 +369,23 @@ namespace Clipboards
                         break;
                 }
             }
+        }
+
+        private void toolStripFavorite_Click(object sender, EventArgs e)
+        {
+            int Index = listBoxClips.SelectedIndex;
+            if (Index != -1)
+            {
+                ClipItem Clip = fClips[Index];
+                fFavorites.Add(Clip);
+                listBoxFavorites.Items.Add(fFavorites.Count.ToString());
+            }
+            listBoxFavorites.Refresh();
+        }
+
+        private void listBoxFavorites_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
         }
     }
 }
