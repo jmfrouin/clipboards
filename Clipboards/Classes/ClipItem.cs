@@ -70,6 +70,8 @@ namespace Clipboards
         private SizeF fTimeStampSize1;
         private SizeF fTimeStampSize2;
         private DateTime fTimeStamp = DateTime.Now;
+
+        private bool fCompactMode;
         #endregion
 
         #region Serialize
@@ -83,12 +85,14 @@ namespace Clipboards
             info.AddValue("OrigProgLargeIcon", this.fOrigProgLargeIcon);
             info.AddValue("ExePath", this.fExePath);
             info.AddValue("TimeStamp", this.fTimeStamp);
+            info.AddValue("Mode", this.fCompactMode);
         }
         #endregion
 
         #region Constructors
         public ClipItem(string ep)
         {
+            fCompactMode = false;
             fExePath = ep;
             fOrigProgSmallIcon = ShellIcon.GetSmallIcon(ep).ToBitmap();
             fOrigProgLargeIcon = ShellIcon.GetLargeIcon(ep).ToBitmap();
@@ -104,37 +108,46 @@ namespace Clipboards
             this.fOrigProgLargeIcon = (Image)info.GetValue("OrigProgLargeIcon", typeof(Image));
             this.fExePath = (string)info.GetValue("ExePath", typeof(string));
             this.fTimeStamp = (DateTime)info.GetValue("TimeStamp", typeof(DateTime));
+            this.fCompactMode = (bool)info.GetValue("Mode", typeof(bool));
         }
         #endregion
 
         public void Measure(MeasureItemEventArgs e, Font font, ref int w, ref int h)
         {
+            //Initial setup
             h = 0;
 
-            //Handle thumbnail
-            if (fImage != null)
+            if (fCompactMode)
             {
-                h += fImagePreview.Height + 4;
-            }
-            
-            //Content
-            if (fContent != string.Empty)
-            {
-                fContentSize = e.Graphics.MeasureString(fContent, font);
-                h += (int)fContentSize.Height + 2;
-                h += (int)fContentSize.Height + 2; //For Misc infos :)
-            }
 
-            //Timestamp
-            fTimeStampSize1 = e.Graphics.MeasureString(fTimeStamp.ToLongDateString(), font);
-            fTimeStampSize2 = e.Graphics.MeasureString(fTimeStamp.ToLongTimeString(), font);
-            h += (int)fTimeStampSize1.Height + 2;
-            h += 2;
-
-            //Minimal size for Icon
-            if (h < 16 + 4)
+            }
+            else
             {
-                h = 16 + 4;
+                //Handle thumbnail
+                if (fImage != null)
+                {
+                    h += fImagePreview.Height + 4;
+                }
+
+                //Content
+                if (fContent != string.Empty)
+                {
+                    fContentSize = e.Graphics.MeasureString(fContent, font);
+                    h += (int)fContentSize.Height + 2;
+                    h += (int)fContentSize.Height + 2; //For Misc infos :)
+                }
+
+                //Timestamp
+                fTimeStampSize1 = e.Graphics.MeasureString(fTimeStamp.ToLongDateString(), font);
+                fTimeStampSize2 = e.Graphics.MeasureString(fTimeStamp.ToLongTimeString(), font);
+                h += (int)fTimeStampSize1.Height + 2;
+                h += 2;
+
+                //Minimal size for Icon
+                if (h < 16 + 4)
+                {
+                    h = 16 + 4;
+                }
             }
         }
 
@@ -142,82 +155,85 @@ namespace Clipboards
         {
             int origY = bounds.Y + 2;
 
-            //Draw border if item is selected only! 
-            Rectangle borderRect = bounds;
-            borderRect.Width = bounds.Width - 1;
-                
-            System.Drawing.SolidBrush myBrush;
-            if ((state & DrawItemState.Selected) == DrawItemState.Selected)
+            if (fCompactMode)
             {
-                Color myColor = Color.FromArgb(0xFF, 0xCC, 0xCC, 0xFF);
-                myBrush = new System.Drawing.SolidBrush(myColor);
-            }
-            else
-            {
-                myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.White);
-            }
-            g.FillRectangle(myBrush, borderRect);
-            g.DrawRectangle(Pens.Black, borderRect);
+                //Draw border if item is selected only! 
+                Rectangle borderRect = bounds;
+                borderRect.Width = bounds.Width - 1;
 
-            //Draw text I/A
-            if (fContent != string.Empty)
-            {
-                Brush textBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
-                int tX = bounds.X + 4 + (bounds.Height < 36 ? 16 : 32);
-                Point textOrig = new Point(tX, origY);
-                Rectangle textRect = new Rectangle(textOrig, Size.Round(fContentSize));
-                g.DrawString(fContent, font, textBrush, textRect);
-                origY += textRect.Height + 2;
-            }
-
-            //Draw thumbnail I/A
-            if (fImage != null)
-            {
-                Rectangle imageRect = fImagePreview;
-                imageRect.X = bounds.Width - fImagePreview.Width - 3;
-                imageRect.Y = origY;
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                g.DrawImage(fImage, imageRect);
-                g.DrawRectangle(Pens.Black, imageRect);
-            }
-
-            //Draw the timestamp
-            Brush tsBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
-            int tsX = bounds.X + 4 + (bounds.Height < 36 ? 16 : 32);
-            Point tsOrig = new Point(tsX, origY);
-            Rectangle tsRect = new Rectangle(tsOrig, Size.Truncate(fTimeStampSize1));
-            tsRect.Width += 1;
-            g.DrawString(fTimeStamp.ToLongDateString(), font, tsBrush, tsRect);
-            tsX += (int)fTimeStampSize1.Width + 4;
-            if (fImage != null)
-            {
-                tsRect.Y += tsRect.Height;
-            }
-            else
-            {
-                tsRect.X = tsX;
-            }
-            g.DrawString(fTimeStamp.ToLongTimeString(), font, tsBrush, tsRect);
-            
-            //Draw size infos
-            tsRect.Y += tsRect.Height + 2; ;
-            if (fImage != null)
-                g.DrawString(fImage.Width.ToString() + "x" + fImage.Height.ToString() + "px", font, tsBrush, tsRect);
-            if (fContent != string.Empty)
-                g.DrawString(fContent.Length.ToString() + "char(s).", font, tsBrush, tsRect);
-
-            //Draw the application icon  ! 
-            if (fOrigProgLargeIcon != null && bounds.Height > 36)
-            {
-                int X = bounds.Width - 2 - fOrigProgLargeIcon.Width;
-                g.DrawImage(fOrigProgLargeIcon, bounds.X + 2, bounds.Y + 2);
-            }
-            else 
-            {
-                if (fOrigProgSmallIcon != null)
+                System.Drawing.SolidBrush myBrush;
+                if ((state & DrawItemState.Selected) == DrawItemState.Selected)
                 {
-                    int X = bounds.Width - 2 - fOrigProgSmallIcon.Width;
-                    g.DrawImage(fOrigProgSmallIcon, bounds.X + 2, bounds.Y + 2);
+                    Color myColor = Color.FromArgb(0xFF, 0xCC, 0xCC, 0xFF);
+                    myBrush = new System.Drawing.SolidBrush(myColor);
+                }
+                else
+                {
+                    myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.White);
+                }
+                g.FillRectangle(myBrush, borderRect);
+                g.DrawRectangle(Pens.Black, borderRect);
+
+                //Draw text I/A
+                if (fContent != string.Empty)
+                {
+                    Brush textBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
+                    int tX = bounds.X + 4 + (bounds.Height < 36 ? 16 : 32);
+                    Point textOrig = new Point(tX, origY);
+                    Rectangle textRect = new Rectangle(textOrig, Size.Round(fContentSize));
+                    g.DrawString(fContent, font, textBrush, textRect);
+                    origY += textRect.Height + 2;
+                }
+
+                //Draw thumbnail I/A
+                if (fImage != null)
+                {
+                    Rectangle imageRect = fImagePreview;
+                    imageRect.X = bounds.Width - fImagePreview.Width - 3;
+                    imageRect.Y = origY;
+                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    g.DrawImage(fImage, imageRect);
+                    g.DrawRectangle(Pens.Black, imageRect);
+                }
+
+                //Draw the timestamp
+                Brush tsBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
+                int tsX = bounds.X + 4 + (bounds.Height < 36 ? 16 : 32);
+                Point tsOrig = new Point(tsX, origY);
+                Rectangle tsRect = new Rectangle(tsOrig, Size.Truncate(fTimeStampSize1));
+                tsRect.Width += 1;
+                g.DrawString(fTimeStamp.ToLongDateString(), font, tsBrush, tsRect);
+                tsX += (int)fTimeStampSize1.Width + 4;
+                if (fImage != null)
+                {
+                    tsRect.Y += tsRect.Height;
+                }
+                else
+                {
+                    tsRect.X = tsX;
+                }
+                g.DrawString(fTimeStamp.ToLongTimeString(), font, tsBrush, tsRect);
+
+                //Draw size infos
+                tsRect.Y += tsRect.Height + 2; ;
+                if (fImage != null)
+                    g.DrawString(fImage.Width.ToString() + "x" + fImage.Height.ToString() + "px", font, tsBrush, tsRect);
+                if (fContent != string.Empty)
+                    g.DrawString(fContent.Length.ToString() + "char(s).", font, tsBrush, tsRect);
+
+                //Draw the application icon  ! 
+                if (fOrigProgLargeIcon != null && bounds.Height > 36)
+                {
+                    int X = bounds.Width - 2 - fOrigProgLargeIcon.Width;
+                    g.DrawImage(fOrigProgLargeIcon, bounds.X + 2, bounds.Y + 2);
+                }
+                else
+                {
+                    if (fOrigProgSmallIcon != null)
+                    {
+                        int X = bounds.Width - 2 - fOrigProgSmallIcon.Width;
+                        g.DrawImage(fOrigProgSmallIcon, bounds.X + 2, bounds.Y + 2);
+                    }
                 }
             }
         }

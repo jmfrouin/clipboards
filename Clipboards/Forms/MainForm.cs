@@ -22,6 +22,8 @@ namespace Clipboards
         //Pour gérer le cas où Clipboards, lui même, push quelque chose dans le ClipBoard system.
         private bool fLocalCopy;
         private bool fCallFromHotkey;
+
+        private string fSettingsFolder;
         #endregion
 
         public MainForm()
@@ -46,6 +48,14 @@ namespace Clipboards
             this.Location = new Point(ScreenW - AppW, ScreenH - AppH - TaskbarH);
             this.ShowInTaskbar = false;
 
+            //Create settings folder i/a
+            fSettingsFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\" + Application.ProductName;
+            if (!System.IO.File.Exists(fSettingsFolder))
+            {
+                System.IO.Directory.CreateDirectory(fSettingsFolder);
+            }
+
+            //Hooks
             RegisterClipboardViewer();
         }
 
@@ -167,6 +177,106 @@ namespace Clipboards
                 g.Dispose();
             }
         }
+
+        private void listBoxFavorites_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char c = e.KeyChar;
+            if (c == 13)
+            {
+                int Index = listBoxFavorites.SelectedIndex;
+                ClipItem Clip = fFavorites[Index];
+                switch (Clip.Type)
+                {
+                    case ClipItem.EType.eText:
+                        {
+                            fLocalCopy = true;
+                            DataObject data = new DataObject();
+                            data.SetData(DataFormats.Text, Clip.Content);
+                            Clipboard.Clear();
+                            Clipboard.SetDataObject(data);
+                            if (fCallFromHotkey)
+                            {
+                                fCallFromHotkey = false;
+                                this.Hide();
+                                SendKeys.SendWait("^v");
+                            }
+                            break;
+                        }
+                    case ClipItem.EType.eImage:
+                        {
+                            fLocalCopy = true;
+                            DataObject data = new DataObject();
+                            data.SetData(DataFormats.Bitmap, Clip.Image);
+                            Clipboard.Clear();
+                            Clipboard.SetDataObject(data);
+                            if (fCallFromHotkey)
+                            {
+                                fCallFromHotkey = false;
+                                this.Hide();
+                                SendKeys.SendWait("^v");
+                            }
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void listBoxFavorites_DoubleClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBoxClips_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char c = e.KeyChar;
+            if (c == 13)
+            {
+                int Index = listBoxClips.SelectedIndex;
+                ClipItem Clip = fClips[Index];
+                switch (Clip.Type)
+                {
+                    case ClipItem.EType.eText:
+                        {
+                            fLocalCopy = true;
+                            DataObject data = new DataObject();
+                            data.SetData(DataFormats.Text, Clip.Content);
+                            Clipboard.Clear();
+                            Clipboard.SetDataObject(data);
+                            if (fCallFromHotkey)
+                            {
+                                fCallFromHotkey = false;
+                                this.Hide();
+                                SendKeys.SendWait("^v");
+                            }
+                            break;
+                        }
+                    case ClipItem.EType.eImage:
+                        {
+                            fLocalCopy = true;
+                            DataObject data = new DataObject();
+                            data.SetData(DataFormats.Bitmap, Clip.Image);
+                            Clipboard.Clear();
+                            Clipboard.SetDataObject(data);
+                            if (fCallFromHotkey)
+                            {
+                                fCallFromHotkey = false;
+                                this.Hide();
+                                SendKeys.SendWait("^v");
+                            }
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void listBoxClips_DoubleClick(object sender, EventArgs e)
+        {
+
+        }
         #endregion
 
         #region (Un)Register to clipboard viewers chain !
@@ -220,37 +330,19 @@ namespace Clipboards
             }
         }
 
-        #region toolStrip callbacks
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AboutBox aBox = new AboutBox();
-            aBox.ShowDialog();
-        }
-
-        private void toolStripDelete_Click(object sender, EventArgs e)
-        {
-            int Index = listBoxClips.SelectedIndex;
-            if (Index != -1)
-            {
-                fClips.RemoveAt(Index);
-                listBoxClips.Items.RemoveAt(Index);
-            }
-        }
-        #endregion
-
         #region Save / Restore Clips
         private void SaveClips()
         {
             try
             {
                 //Normal
-                using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "Clips.bin", FileMode.Create))
+                using (Stream stream = File.Open(fSettingsFolder + "\\Clips.bin", FileMode.Create))
                 {
                     BinaryFormatter bin = new BinaryFormatter();
                     bin.Serialize(stream, fClips);
                 }
                 //Favoris
-                using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "FClips.bin", FileMode.Create))
+                using (Stream stream = File.Open(fSettingsFolder + "\\Favorites.bin", FileMode.Create))
                 {
                     BinaryFormatter bin = new BinaryFormatter();
                     bin.Serialize(stream, fFavorites);
@@ -266,7 +358,7 @@ namespace Clipboards
             try
             {
                 //Normal
-                using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "Clips.bin", FileMode.Open))
+                using (Stream stream = File.Open(fSettingsFolder + "\\Clips.bin", FileMode.Open))
                 {
                     BinaryFormatter bin = new BinaryFormatter();
                     fClips = (List<ClipItem>)bin.Deserialize(stream);
@@ -278,7 +370,7 @@ namespace Clipboards
                     }
                 }
                 //Favorites
-                using (Stream stream = File.Open(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "FClips.bin", FileMode.Open))
+                using (Stream stream = File.Open(fSettingsFolder + "\\Favorites.bin", FileMode.Open))
                 {
                     BinaryFormatter bin = new BinaryFormatter();
                     fFavorites = (List<ClipItem>)bin.Deserialize(stream);
@@ -297,6 +389,23 @@ namespace Clipboards
         }
         #endregion
 
+        #region toolStrip callbacks
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox aBox = new AboutBox();
+            aBox.ShowDialog();
+        }
+
+        private void toolStripDelete_Click(object sender, EventArgs e)
+        {
+            int Index = listBoxClips.SelectedIndex;
+            if (Index != -1)
+            {
+                fClips.RemoveAt(Index);
+                listBoxClips.Items.RemoveAt(Index);
+            }
+        }
+        
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -326,52 +435,21 @@ namespace Clipboards
             listBoxClips.Refresh();
         }
 
-        private void listBoxClips_KeyPress(object sender, KeyPressEventArgs e)
+        private void toolStripButtonExpandPreviewPan_Click(object sender, EventArgs e)
         {
-            char c = e.KeyChar;
-            if (c == 13)
+            if (splitContainer2.Panel1Collapsed)
             {
-                int Index = listBoxClips.SelectedIndex;
-                ClipItem Clip = fClips[Index];
-                switch (Clip.Type)
-                {
-                    case ClipItem.EType.eText:
-                        {
-                            fLocalCopy = true;
-                            DataObject data = new DataObject();
-                            data.SetData(DataFormats.Text, Clip.Content);
-                            Clipboard.Clear();
-                            Clipboard.SetDataObject(data);
-                            if (fCallFromHotkey)
-                            {
-                                fCallFromHotkey = false;
-                                this.Hide();
-                                SendKeys.SendWait("^v");
-                            }
-                            break;
-                        }
-                    case ClipItem.EType.eImage:
-                        {
-                            fLocalCopy = true;
-                            DataObject data = new DataObject();
-                            data.SetData(DataFormats.Bitmap, Clip.Image);
-                            Clipboard.Clear();
-                            Clipboard.SetDataObject(data);
-                            if (fCallFromHotkey)
-                            {
-                                fCallFromHotkey = false;
-                                this.Hide();
-                                SendKeys.SendWait("^v");
-                            }
-                            break;
-                        }
-                    default:
-                        break;
-                }
+                splitContainer2.Panel1Collapsed = false;
+                splitContainer2.Panel1.Show(); 
+            }
+            else 
+            {
+                splitContainer2.Panel1Collapsed = true;
+                splitContainer2.Panel1.Hide(); 
             }
         }
 
-        private void toolStripFavorite_Click(object sender, EventArgs e)
+        private void toolStripButtonAddFav_Click(object sender, EventArgs e)
         {
             int Index = listBoxClips.SelectedIndex;
             if (Index != -1)
@@ -383,9 +461,19 @@ namespace Clipboards
             listBoxFavorites.Refresh();
         }
 
-        private void listBoxFavorites_KeyPress(object sender, KeyPressEventArgs e)
+        private void toolStripFavorites_Click(object sender, EventArgs e)
         {
-
+            if (splitContainer2.Panel2Collapsed)
+            {
+                splitContainer2.Panel2Collapsed = false;
+                splitContainer2.Panel2.Show();
+            }
+            else
+            {
+                splitContainer2.Panel2Collapsed = true;
+                splitContainer2.Panel2.Hide();
+            }
         }
+        #endregion
     }
 }

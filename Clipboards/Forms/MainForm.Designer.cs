@@ -33,10 +33,10 @@
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.mainMenu = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonExpandPreviewPan = new System.Windows.Forms.ToolStripButton();
+            this.toolStripFavorites = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripPaste = new System.Windows.Forms.ToolStripButton();
-            this.toolStripFavorite = new System.Windows.Forms.ToolStripButton();
             this.toolStripDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripUp = new System.Windows.Forms.ToolStripButton();
@@ -46,7 +46,7 @@
             this.MainPanel = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.splitContainerPreviewPan = new System.Windows.Forms.SplitContainer();
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.listBoxFavorites = new System.Windows.Forms.ListBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -55,6 +55,8 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.toolStripButtonAddFav = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.statusBar.SuspendLayout();
             this.mainMenu.SuspendLayout();
             this.MainPanel.SuspendLayout();
@@ -66,9 +68,9 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerPreviewPan)).BeginInit();
+            this.splitContainerPreviewPan.Panel1.SuspendLayout();
+            this.splitContainerPreviewPan.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -92,29 +94,39 @@
             // mainMenu
             // 
             this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
+            this.toolStripButtonExpandPreviewPan,
+            this.toolStripFavorites,
             this.toolStripSeparator4,
             this.toolStripPaste,
-            this.toolStripFavorite,
             this.toolStripDelete,
+            this.toolStripSeparator2,
+            this.toolStripButtonAddFav,
             this.toolStripSeparator1,
             this.toolStripUp,
             this.toolStripDown,
-            this.toolStripSeparator2});
+            this.toolStripSeparator5});
             this.mainMenu.Location = new System.Drawing.Point(0, 24);
             this.mainMenu.Name = "mainMenu";
             this.mainMenu.Size = new System.Drawing.Size(557, 25);
             this.mainMenu.TabIndex = 1;
             this.mainMenu.Text = "toolStrip1";
             // 
-            // toolStripButton1
+            // toolStripButtonExpandPreviewPan
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButtonExpandPreviewPan.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonExpandPreviewPan.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonExpandPreviewPan.Image")));
+            this.toolStripButtonExpandPreviewPan.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonExpandPreviewPan.Name = "toolStripButtonExpandPreviewPan";
+            this.toolStripButtonExpandPreviewPan.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonExpandPreviewPan.Click += new System.EventHandler(this.toolStripButtonExpandPreviewPan_Click);
+            // 
+            // toolStripFavorites
+            // 
+            this.toolStripFavorites.Image = ((System.Drawing.Image)(resources.GetObject("toolStripFavorites.Image")));
+            this.toolStripFavorites.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripFavorites.Name = "toolStripFavorites";
+            this.toolStripFavorites.Size = new System.Drawing.Size(23, 22);
+            this.toolStripFavorites.Click += new System.EventHandler(this.toolStripFavorites_Click);
             // 
             // toolStripSeparator4
             // 
@@ -128,15 +140,6 @@
             this.toolStripPaste.Name = "toolStripPaste";
             this.toolStripPaste.Size = new System.Drawing.Size(55, 22);
             this.toolStripPaste.Text = "Paste";
-            // 
-            // toolStripFavorite
-            // 
-            this.toolStripFavorite.Image = ((System.Drawing.Image)(resources.GetObject("toolStripFavorite.Image")));
-            this.toolStripFavorite.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripFavorite.Name = "toolStripFavorite";
-            this.toolStripFavorite.Size = new System.Drawing.Size(69, 22);
-            this.toolStripFavorite.Text = "Favorite";
-            this.toolStripFavorite.Click += new System.EventHandler(this.toolStripFavorite_Click);
             // 
             // toolStripDelete
             // 
@@ -188,6 +191,7 @@
             this.listBoxClips.TabIndex = 0;
             this.listBoxClips.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.DrawItem);
             this.listBoxClips.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.MeasureItem);
+            this.listBoxClips.DoubleClick += new System.EventHandler(this.listBoxClips_DoubleClick);
             this.listBoxClips.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listBoxClips_KeyPress);
             // 
             // MainPanel
@@ -227,7 +231,7 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.splitContainer3);
+            this.splitContainer2.Panel1.Controls.Add(this.splitContainerPreviewPan);
             // 
             // splitContainer2.Panel2
             // 
@@ -236,19 +240,19 @@
             this.splitContainer2.SplitterDistance = 92;
             this.splitContainer2.TabIndex = 0;
             // 
-            // splitContainer3
+            // splitContainerPreviewPan
             // 
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
-            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitContainerPreviewPan.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerPreviewPan.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerPreviewPan.Name = "splitContainerPreviewPan";
+            this.splitContainerPreviewPan.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer3.Panel1
+            // splitContainerPreviewPan.Panel1
             // 
-            this.splitContainer3.Panel1.Controls.Add(this.pictureBoxPreview);
-            this.splitContainer3.Size = new System.Drawing.Size(92, 272);
-            this.splitContainer3.SplitterDistance = 116;
-            this.splitContainer3.TabIndex = 0;
+            this.splitContainerPreviewPan.Panel1.Controls.Add(this.pictureBoxPreview);
+            this.splitContainerPreviewPan.Size = new System.Drawing.Size(92, 272);
+            this.splitContainerPreviewPan.SplitterDistance = 116;
+            this.splitContainerPreviewPan.TabIndex = 0;
             // 
             // pictureBoxPreview
             // 
@@ -271,6 +275,7 @@
             this.listBoxFavorites.TabIndex = 0;
             this.listBoxFavorites.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.FavDrawItem);
             this.listBoxFavorites.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.FavMeasureItem);
+            this.listBoxFavorites.DoubleClick += new System.EventHandler(this.listBoxFavorites_DoubleClick);
             this.listBoxFavorites.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listBoxFavorites_KeyPress);
             // 
             // menuStrip1
@@ -321,6 +326,20 @@
             this.trayIcon.Text = "trayIcon";
             this.trayIcon.Visible = true;
             // 
+            // toolStripButtonAddFav
+            // 
+            this.toolStripButtonAddFav.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAddFav.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAddFav.Image")));
+            this.toolStripButtonAddFav.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAddFav.Name = "toolStripButtonAddFav";
+            this.toolStripButtonAddFav.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonAddFav.Click += new System.EventHandler(this.toolStripButtonAddFav_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -348,9 +367,9 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
-            this.splitContainer3.ResumeLayout(false);
+            this.splitContainerPreviewPan.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerPreviewPan)).EndInit();
+            this.splitContainerPreviewPan.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -365,7 +384,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStrip mainMenu;
         private System.Windows.Forms.ToolStripButton toolStripPaste;
-        private System.Windows.Forms.ToolStripButton toolStripFavorite;
+        private System.Windows.Forms.ToolStripButton toolStripFavorites;
         private System.Windows.Forms.ToolStripButton toolStripDelete;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton toolStripUp;
@@ -382,10 +401,12 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.ListBox listBoxFavorites;
-        private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.PictureBox pictureBoxPreview;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton toolStripButtonExpandPreviewPan;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.SplitContainer splitContainerPreviewPan;
+        private System.Windows.Forms.PictureBox pictureBoxPreview;
+        private System.Windows.Forms.ToolStripButton toolStripButtonAddFav;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }
 
