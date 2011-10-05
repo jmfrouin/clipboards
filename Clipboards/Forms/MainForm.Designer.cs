@@ -38,10 +38,12 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripPaste = new System.Windows.Forms.ToolStripButton();
             this.toolStripDelete = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonAddFav = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripUp = new System.Windows.Forms.ToolStripButton();
             this.toolStripDown = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.listBoxClips = new System.Windows.Forms.ListBox();
             this.MainPanel = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -55,8 +57,6 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.toolStripButtonAddFav = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.statusBar.SuspendLayout();
             this.mainMenu.SuspendLayout();
             this.MainPanel.SuspendLayout();
@@ -150,6 +150,20 @@
             this.toolStripDelete.Text = "Delete";
             this.toolStripDelete.Click += new System.EventHandler(this.toolStripDelete_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonAddFav
+            // 
+            this.toolStripButtonAddFav.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAddFav.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAddFav.Image")));
+            this.toolStripButtonAddFav.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAddFav.Name = "toolStripButtonAddFav";
+            this.toolStripButtonAddFav.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonAddFav.Click += new System.EventHandler(this.toolStripButtonAddFav_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -174,10 +188,10 @@
             this.toolStripDown.Text = "toolStripButton2";
             this.toolStripDown.Click += new System.EventHandler(this.toolStripDown_Click);
             // 
-            // toolStripSeparator2
+            // toolStripSeparator5
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
             // 
             // listBoxClips
             // 
@@ -325,20 +339,7 @@
             this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
             this.trayIcon.Text = "trayIcon";
             this.trayIcon.Visible = true;
-            // 
-            // toolStripButtonAddFav
-            // 
-            this.toolStripButtonAddFav.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonAddFav.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAddFav.Image")));
-            this.toolStripButtonAddFav.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonAddFav.Name = "toolStripButtonAddFav";
-            this.toolStripButtonAddFav.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonAddFav.Click += new System.EventHandler(this.toolStripButtonAddFav_Click);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            this.trayIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.trayIcon_MouseClick);
             // 
             // MainForm
             // 

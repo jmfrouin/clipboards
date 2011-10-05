@@ -475,5 +475,11 @@ namespace Clipboards
             }
         }
         #endregion
+
+        private void trayIcon_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (Visible) this.Hide();
+            else this.Show();
+        }
     }
 }
