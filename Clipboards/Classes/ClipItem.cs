@@ -53,8 +53,10 @@ namespace Clipboards
                     S = 25;
                 if (H > S || W > S)
                 {
-                    W = H < W ? S : ((W * S) / H);
-                    H = H < W ? ((H * S) / W) : S;
+                    int tW = H < W ? S : ((W * S) / H);
+                    int tH = H < W ? ((H * S) / W) : S;
+                    W = tW;
+                    H = tH;
                 }
                 fImagePreview = new Rectangle(0, 0, W, H);
             }
@@ -159,6 +161,11 @@ namespace Clipboards
         public void Draw(Graphics g, Rectangle bounds, DrawItemState state, Font font)
         {
             int origY = bounds.Y + 2;
+
+            //Before everything else, set Clipping region to avoid pb ! 
+            Rectangle clippingRect = bounds;
+            clippingRect.Inflate(1, 1);
+            g.SetClip(clippingRect, CombineMode.Replace);
 
             //Draw border if item is selected only! 
             Rectangle borderRect = bounds;
