@@ -63,13 +63,13 @@ namespace Clipboards
         private void MainForm_Activated(object sender, System.EventArgs e)
         {
             //this.Opacity = 1;
-            this.Show();
+            //this.Show();
         }
 
         private void MainForm_Deactivate(object sender, System.EventArgs e)
         {
             //this.Opacity = 0.3;
-            this.Hide();
+            //this.Hide();
         }
 
         private void MainForm_Load(object sender, System.EventArgs e)
@@ -480,6 +480,12 @@ namespace Clipboards
         {
             if (Visible) this.Hide();
             else this.Show();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SettingsBox sBox = new SettingsBox();
+            sBox.ShowDialog();
         }
     }
 }
