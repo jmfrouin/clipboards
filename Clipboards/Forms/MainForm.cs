@@ -487,6 +487,7 @@ namespace Clipboards
                 fClips.RemoveAt(Index);
                 fClips.Insert(Index - 1, Clip);
             }
+            listBoxClips.SelectedIndex = Index - 1;
             listBoxClips.Refresh();
         }
 
@@ -499,6 +500,7 @@ namespace Clipboards
                 fClips.RemoveAt(Index);
                 fClips.Insert(Index + 1, Clip);
             }
+            listBoxClips.SelectedIndex = Index + 1;
             listBoxClips.Refresh();
         }
 
