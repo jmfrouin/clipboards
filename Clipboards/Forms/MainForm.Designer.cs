@@ -53,12 +53,13 @@
             this.listBoxFavorites = new System.Windows.Forms.ListBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.richTextBoxPreview = new System.Windows.Forms.RichTextBox();
             this.statusBar.SuspendLayout();
             this.mainMenu.SuspendLayout();
             this.MainPanel.SuspendLayout();
@@ -72,6 +73,7 @@
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerPreviewPan)).BeginInit();
             this.splitContainerPreviewPan.Panel1.SuspendLayout();
+            this.splitContainerPreviewPan.Panel2.SuspendLayout();
             this.splitContainerPreviewPan.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -83,7 +85,7 @@
             this.toolStripStatusLabel1});
             this.statusBar.Location = new System.Drawing.Point(0, 321);
             this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(557, 22);
+            this.statusBar.Size = new System.Drawing.Size(907, 22);
             this.statusBar.TabIndex = 0;
             this.statusBar.Text = "statusStrip1";
             // 
@@ -109,7 +111,7 @@
             this.toolStripSeparator5});
             this.mainMenu.Location = new System.Drawing.Point(0, 24);
             this.mainMenu.Name = "mainMenu";
-            this.mainMenu.Size = new System.Drawing.Size(557, 25);
+            this.mainMenu.Size = new System.Drawing.Size(907, 25);
             this.mainMenu.TabIndex = 1;
             this.mainMenu.Text = "toolStrip1";
             // 
@@ -203,8 +205,9 @@
             this.listBoxClips.FormattingEnabled = true;
             this.listBoxClips.Location = new System.Drawing.Point(0, 0);
             this.listBoxClips.Name = "listBoxClips";
-            this.listBoxClips.Size = new System.Drawing.Size(276, 272);
+            this.listBoxClips.Size = new System.Drawing.Size(209, 272);
             this.listBoxClips.TabIndex = 0;
+            this.listBoxClips.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBoxClips_MouseClick);
             this.listBoxClips.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.DrawItem);
             this.listBoxClips.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.MeasureItem);
             this.listBoxClips.DoubleClick += new System.EventHandler(this.listBoxClips_DoubleClick);
@@ -219,7 +222,7 @@
             this.MainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainPanel.Location = new System.Drawing.Point(0, 0);
             this.MainPanel.Name = "MainPanel";
-            this.MainPanel.Size = new System.Drawing.Size(557, 321);
+            this.MainPanel.Size = new System.Drawing.Size(907, 321);
             this.MainPanel.TabIndex = 0;
             // 
             // splitContainer1
@@ -235,8 +238,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listBoxClips);
-            this.splitContainer1.Size = new System.Drawing.Size(557, 272);
-            this.splitContainer1.SplitterDistance = 277;
+            this.splitContainer1.Size = new System.Drawing.Size(907, 272);
+            this.splitContainer1.SplitterDistance = 694;
             this.splitContainer1.TabIndex = 3;
             // 
             // splitContainer2
@@ -252,8 +255,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.listBoxFavorites);
-            this.splitContainer2.Size = new System.Drawing.Size(277, 272);
-            this.splitContainer2.SplitterDistance = 92;
+            this.splitContainer2.Size = new System.Drawing.Size(694, 272);
+            this.splitContainer2.SplitterDistance = 494;
             this.splitContainer2.TabIndex = 0;
             // 
             // splitContainerPreviewPan
@@ -261,13 +264,16 @@
             this.splitContainerPreviewPan.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerPreviewPan.Location = new System.Drawing.Point(0, 0);
             this.splitContainerPreviewPan.Name = "splitContainerPreviewPan";
-            this.splitContainerPreviewPan.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainerPreviewPan.Panel1
             // 
             this.splitContainerPreviewPan.Panel1.Controls.Add(this.pictureBoxPreview);
-            this.splitContainerPreviewPan.Size = new System.Drawing.Size(92, 272);
-            this.splitContainerPreviewPan.SplitterDistance = 116;
+            // 
+            // splitContainerPreviewPan.Panel2
+            // 
+            this.splitContainerPreviewPan.Panel2.Controls.Add(this.richTextBoxPreview);
+            this.splitContainerPreviewPan.Size = new System.Drawing.Size(494, 272);
+            this.splitContainerPreviewPan.SplitterDistance = 290;
             this.splitContainerPreviewPan.TabIndex = 0;
             // 
             // pictureBoxPreview
@@ -275,7 +281,8 @@
             this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxPreview.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(92, 116);
+            this.pictureBoxPreview.Size = new System.Drawing.Size(290, 272);
+            this.pictureBoxPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
             // 
@@ -287,7 +294,7 @@
             this.listBoxFavorites.FormattingEnabled = true;
             this.listBoxFavorites.Location = new System.Drawing.Point(0, 0);
             this.listBoxFavorites.Name = "listBoxFavorites";
-            this.listBoxFavorites.Size = new System.Drawing.Size(181, 272);
+            this.listBoxFavorites.Size = new System.Drawing.Size(196, 272);
             this.listBoxFavorites.TabIndex = 0;
             this.listBoxFavorites.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.FavDrawItem);
             this.listBoxFavorites.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.FavMeasureItem);
@@ -300,7 +307,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(557, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(907, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -316,22 +323,34 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(113, 6);
+            // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(113, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -345,23 +364,20 @@
             this.trayIcon.Visible = true;
             this.trayIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.trayIcon_MouseClick);
             // 
-            // settingsToolStripMenuItem
+            // richTextBoxPreview
             // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(149, 6);
+            this.richTextBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBoxPreview.Location = new System.Drawing.Point(0, 0);
+            this.richTextBoxPreview.Name = "richTextBoxPreview";
+            this.richTextBoxPreview.Size = new System.Drawing.Size(200, 272);
+            this.richTextBoxPreview.TabIndex = 0;
+            this.richTextBoxPreview.Text = "";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(557, 343);
+            this.ClientSize = new System.Drawing.Size(907, 343);
             this.Controls.Add(this.MainPanel);
             this.Controls.Add(this.statusBar);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -384,6 +400,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.splitContainerPreviewPan.Panel1.ResumeLayout(false);
+            this.splitContainerPreviewPan.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerPreviewPan)).EndInit();
             this.splitContainerPreviewPan.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
@@ -425,6 +442,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.RichTextBox richTextBoxPreview;
     }
 }
 

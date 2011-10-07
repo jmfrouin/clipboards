@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace Clipboards
 {
@@ -26,6 +27,7 @@ namespace Clipboards
         private string fSettingsFolder;
         #endregion
 
+        #region Ctor / Dtor
         public MainForm()
         {
             InitializeComponent();
@@ -58,6 +60,7 @@ namespace Clipboards
             //Hooks
             RegisterClipboardViewer();
         }
+        #endregion
 
         #region Callbacks !
         private void MainForm_Activated(object sender, System.EventArgs e)
@@ -75,9 +78,10 @@ namespace Clipboards
         private void MainForm_Load(object sender, System.EventArgs e)
         {
             RestoreClips();
-            //Register CTRL+SHIFT+D
+            //Register CTRL+SHIFT+D & CTRL+E
             //http://msdn.microsoft.com/en-us/library/windows/desktop/ms646279(v=vs.85).aspx
-            APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), 0x2, (int)'E');
+            APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), APIFuncs.Constants.CTRL + APIFuncs.Constants.SHIFT, (int)'V');
+            APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), APIFuncs.Constants.CTRL, (int)'E');
         }
 
         private void MainForm_Closed(object sender, System.EventArgs e)
@@ -86,7 +90,70 @@ namespace Clipboards
             UnregisterClipboardViewer();
             SaveClips();
         }
-        #endregion
+
+        protected override void WndProc(ref Message m)
+        {
+            switch ((APIFuncs.Msgs)m.Msg)
+            {
+                case APIFuncs.Msgs.WM_HOTKEY:
+                    {
+                        Keys key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);
+                        int Modifiers = ((int)m.LParam & 0xFFFF);
+                        switch (key)
+                        {
+                            case Keys.E:
+                                {
+                                    if(Modifiers == APIFuncs.Constants.CTRL)
+                                    {
+                                        this.Show();
+                                        this.Activate();
+                                        fCallFromHotkey = true;
+                                    }
+                                    break;
+                                }
+                            case Keys.V:
+                                {
+                                    if ((Modifiers == (APIFuncs.Constants.CTRL + APIFuncs.Constants.SHIFT)))
+                                    {
+                                        this.Show();
+                                        this.Activate();
+                                        fCallFromHotkey = true;
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+
+                        }
+                        break;
+                    }
+                case APIFuncs.Msgs.WM_DRAWCLIPBOARD:
+                    {
+                        InsertClip();
+                        if (ClipboardViewerNext != System.IntPtr.Zero)
+                            APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+                        break;
+                    }
+                case APIFuncs.Msgs.WM_CHANGECBCHAIN:
+                    {
+                        if (m.WParam == ClipboardViewerNext)
+                        {
+                            ClipboardViewerNext = m.LParam;
+                        }
+                        else
+                        {
+                            if (ClipboardViewerNext != System.IntPtr.Zero)
+                                APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        base.WndProc(ref m);
+                        break;
+                    }
+            }
+        }
 
         private void InsertClip()
         {
@@ -134,10 +201,20 @@ namespace Clipboards
                         fLocalCopy = false;
                     }
                 }
+
+                //Handle Bitmap element
+                string[] type = iData.GetFormats();
+                int a = type.Length;
+                if (a == 3)
+                {
+                    int b = 3;
+                }
+
             }
         }
+        #endregion
 
-        #region Customized listboxes ! 
+        #region Customized listboxes !
         private void MeasureItem(object sender, MeasureItemEventArgs e)
         {
             ClipItem Clip = fClips[e.Index];
@@ -277,6 +354,35 @@ namespace Clipboards
         {
 
         }
+
+        private void listBoxClips_MouseClick(object sender, MouseEventArgs e)
+        {
+            int Index = listBoxClips.SelectedIndex;
+            ClipItem Clip = fClips[Index];
+            switch (Clip.Type)
+            {
+                case ClipItem.EType.eImage:
+                    {
+                        pictureBoxPreview.Image = Clip.Image;
+                        splitContainerPreviewPan.Panel1Collapsed = false;
+                        splitContainerPreviewPan.Panel1.Show();
+                        splitContainerPreviewPan.Panel2Collapsed = true;
+                        splitContainerPreviewPan.Panel2.Hide();
+                        break;
+                    }
+                case ClipItem.EType.eText:
+                    {
+                        richTextBoxPreview.Text = Clip.Content;
+                        splitContainerPreviewPan.Panel1Collapsed = true;
+                        splitContainerPreviewPan.Panel1.Hide();
+                        splitContainerPreviewPan.Panel2Collapsed = false;
+                        splitContainerPreviewPan.Panel2.Show();
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }
         #endregion
 
         #region (Un)Register to clipboard viewers chain !
@@ -290,45 +396,6 @@ namespace Clipboards
             APIFuncs.ChangeClipboardChain(this.Handle, ClipboardViewerNext);
         }
         #endregion
-
-        protected override void WndProc(ref Message m)
-        {
-            switch ((Clipboards.APIFuncs.Msgs)m.Msg)
-            {
-                case Clipboards.APIFuncs.Msgs.WM_HOTKEY:
-                {
-                    this.Show();
-                    this.Activate();
-                    fCallFromHotkey = true;
-                    break;
-                }
-                case Clipboards.APIFuncs.Msgs.WM_DRAWCLIPBOARD:
-                {
-                    InsertClip();
-                    if (ClipboardViewerNext != System.IntPtr.Zero)
-                        APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
-                    break;
-                }
-                case Clipboards.APIFuncs.Msgs.WM_CHANGECBCHAIN:
-                {
-                    if (m.WParam == ClipboardViewerNext)
-                    {
-                        ClipboardViewerNext = m.LParam;
-                    }
-                    else
-                    {
-                        if (ClipboardViewerNext != System.IntPtr.Zero)
-                            APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
-                    }
-                    break;
-                }
-                default:
-                {
-                    base.WndProc(ref m);
-                    break;
-                }
-            }
-        }
 
         #region Save / Restore Clips
         private void SaveClips()
@@ -474,18 +541,21 @@ namespace Clipboards
                 splitContainer2.Panel2.Hide();
             }
         }
-        #endregion
-
-        private void trayIcon_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (Visible) this.Hide();
-            else this.Show();
-        }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SettingsBox sBox = new SettingsBox();
             sBox.ShowDialog();
         }
+        #endregion
+
+        #region Tray icons callbacks
+        private void trayIcon_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (Visible) this.Hide();
+            else this.Show();
+        }
+        #endregion
+        
     }
 }
