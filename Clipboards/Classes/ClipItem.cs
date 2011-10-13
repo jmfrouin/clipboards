@@ -199,7 +199,7 @@ namespace Clipboards
                     int tX = bounds.X + 20;
                     Point textOrig = new Point(tX, origY);
                     Rectangle textRect = new Rectangle(textOrig, Size.Round(fContentSize));
-                    textRect.Height = (int)fContentSize.Height;
+                    textRect.Inflate(1, 1);
                     g.DrawString(fContent, font, textBrush, textRect);
                     origY += textRect.Height + 2;
                 }
@@ -249,6 +249,7 @@ namespace Clipboards
                     int tX = bounds.X + 4 + (bounds.Height < 36 ? 16 : 32);
                     Point textOrig = new Point(tX, origY);
                     Rectangle textRect = new Rectangle(textOrig, Size.Round(fContentSize));
+                    textRect.Inflate(1, 1);
                     g.DrawString(fContent, font, textBrush, textRect);
                     origY += textRect.Height + 2;
                 }

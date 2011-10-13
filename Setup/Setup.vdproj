@@ -49,6 +49,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -65,6 +73,27 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -133,7 +162,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_A0E2EE7812D74F4DB60B5457F4BA52D4"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -170,15 +199,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Clipboards"
-        "ProductCode" = "8:{6C005C8E-CF0E-4A29-985F-7902795230E4}"
-        "PackageCode" = "8:{2D55B6CD-6236-467E-B060-87BB80A79C33}"
+        "ProductCode" = "8:{38D45FD1-D6E3-422C-A4F8-0C580E61EB4F}"
+        "PackageCode" = "8:{42E0A26D-DAAA-442D-825F-1AEC0E94723A}"
         "UpgradeCode" = "8:{4ECB3B6F-BD7A-41D8-9688-CB0ECD4964D9}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "InstallAllUsers" = "11:TRUE"
+        "ProductVersion" = "8:0.10"
         "Manufacturer" = "8:Anneis"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.anneis.com/clipboards"
@@ -192,7 +221,7 @@
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:0"
+        "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
@@ -720,7 +749,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A403FC925FBA46EBA78B11BA10625B68"
             {
-            "SourcePath" = "8:..\\Clipboards\\obj\\Debug\\Clipboards.exe"
+            "SourcePath" = "8:..\\Clipboards\\obj\\Release\\Clipboards.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A0E2EE7812D74F4DB60B5457F4BA52D4"

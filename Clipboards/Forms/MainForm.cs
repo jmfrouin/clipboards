@@ -363,11 +363,11 @@ namespace Clipboards
             {
                 case ClipItem.EType.eImage:
                     {
-                        pictureBoxPreview.Image = Clip.Image;
                         splitContainerPreviewPan.Panel1Collapsed = false;
                         splitContainerPreviewPan.Panel1.Show();
                         splitContainerPreviewPan.Panel2Collapsed = true;
                         splitContainerPreviewPan.Panel2.Hide();
+                        pictureBoxPreview.Image = Clip.Image;
                         break;
                     }
                 case ClipItem.EType.eText:
@@ -486,8 +486,8 @@ namespace Clipboards
                 ClipItem Clip = fClips[Index];
                 fClips.RemoveAt(Index);
                 fClips.Insert(Index - 1, Clip);
+                listBoxClips.SelectedIndex = Index - 1;
             }
-            listBoxClips.SelectedIndex = Index - 1;
             listBoxClips.Refresh();
         }
 
@@ -499,8 +499,8 @@ namespace Clipboards
                 ClipItem Clip = fClips[Index];
                 fClips.RemoveAt(Index);
                 fClips.Insert(Index + 1, Clip);
+                listBoxClips.SelectedIndex = Index + 1;
             }
-            listBoxClips.SelectedIndex = Index + 1;
             listBoxClips.Refresh();
         }
 

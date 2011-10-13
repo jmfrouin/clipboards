@@ -50,6 +50,7 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainerPreviewPan = new System.Windows.Forms.SplitContainer();
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
+            this.richTextBoxPreview = new System.Windows.Forms.RichTextBox();
             this.listBoxFavorites = new System.Windows.Forms.ListBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,7 +60,6 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.richTextBoxPreview = new System.Windows.Forms.RichTextBox();
             this.statusBar.SuspendLayout();
             this.mainMenu.SuspendLayout();
             this.MainPanel.SuspendLayout();
@@ -282,9 +282,18 @@
             this.pictureBoxPreview.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxPreview.Name = "pictureBoxPreview";
             this.pictureBoxPreview.Size = new System.Drawing.Size(290, 272);
-            this.pictureBoxPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBoxPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
+            // 
+            // richTextBoxPreview
+            // 
+            this.richTextBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBoxPreview.Location = new System.Drawing.Point(0, 0);
+            this.richTextBoxPreview.Name = "richTextBoxPreview";
+            this.richTextBoxPreview.Size = new System.Drawing.Size(200, 272);
+            this.richTextBoxPreview.TabIndex = 0;
+            this.richTextBoxPreview.Text = "";
             // 
             // listBoxFavorites
             // 
@@ -363,15 +372,6 @@
             this.trayIcon.Text = "trayIcon";
             this.trayIcon.Visible = true;
             this.trayIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.trayIcon_MouseClick);
-            // 
-            // richTextBoxPreview
-            // 
-            this.richTextBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBoxPreview.Location = new System.Drawing.Point(0, 0);
-            this.richTextBoxPreview.Name = "richTextBoxPreview";
-            this.richTextBoxPreview.Size = new System.Drawing.Size(200, 272);
-            this.richTextBoxPreview.TabIndex = 0;
-            this.richTextBoxPreview.Text = "";
             // 
             // MainForm
             // 
