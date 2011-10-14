@@ -49,7 +49,7 @@ namespace Clipboards
                 int H = fImage.Height;
                 int W = fImage.Width;
                 int S = 100;
-                if (fCompactMode)
+                if (Properties.Settings.Default.CompactMode)
                     S = 25;
                 if (H > S || W > S)
                 {
@@ -75,8 +75,6 @@ namespace Clipboards
         private SizeF fTimeStampSize1;
         private SizeF fTimeStampSize2;
         private DateTime fTimeStamp = DateTime.Now;
-
-        private bool fCompactMode;
         #endregion
 
         #region Serialize
@@ -90,14 +88,12 @@ namespace Clipboards
             info.AddValue("OrigProgLargeIcon", this.fOrigProgLargeIcon);
             info.AddValue("ExePath", this.fExePath);
             info.AddValue("TimeStamp", this.fTimeStamp);
-            info.AddValue("Mode", this.fCompactMode);
         }
         #endregion
 
         #region Constructors
         public ClipItem(string ep)
         {
-            fCompactMode = true;
             fExePath = ep;
             fOrigProgSmallIcon = ShellIcon.GetSmallIcon(ep).ToBitmap();
             fOrigProgLargeIcon = ShellIcon.GetLargeIcon(ep).ToBitmap();
@@ -113,7 +109,6 @@ namespace Clipboards
             this.fOrigProgLargeIcon = (Image)info.GetValue("OrigProgLargeIcon", typeof(Image));
             this.fExePath = (string)info.GetValue("ExePath", typeof(string));
             this.fTimeStamp = (DateTime)info.GetValue("TimeStamp", typeof(DateTime));
-            this.fCompactMode = (bool)info.GetValue("Mode", typeof(bool));
         }
         #endregion
 
@@ -126,8 +121,8 @@ namespace Clipboards
 
             if (fContent != string.Empty)
                 fContentSize = e.Graphics.MeasureString(fContent, font);
-                
-            if (fCompactMode)
+
+            if (Properties.Settings.Default.CompactMode)
             {
                 h = ((int)fTimeStampSize1.Height + 4) << 1;
             }
@@ -183,7 +178,7 @@ namespace Clipboards
             g.FillRectangle(myBrush, borderRect);
             g.DrawRectangle(Pens.Black, borderRect);
 
-            if (fCompactMode)
+            if (Properties.Settings.Default.CompactMode)
             {
                 //Draw the application icon  ! 
                 if (fOrigProgSmallIcon != null)

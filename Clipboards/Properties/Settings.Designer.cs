@@ -26,12 +26,24 @@ namespace Clipboards.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AutoRun {
+        public bool DisplayFavorites {
             get {
-                return ((bool)(this["AutoRun"]));
+                return ((bool)(this["DisplayFavorites"]));
             }
             set {
-                this["AutoRun"] = value;
+                this["DisplayFavorites"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisplayPreview {
+            get {
+                return ((bool)(this["DisplayPreview"]));
+            }
+            set {
+                this["DisplayPreview"] = value;
             }
         }
         
@@ -50,24 +62,12 @@ namespace Clipboards.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisplayFavorites {
+        public bool AutoRun {
             get {
-                return ((bool)(this["DisplayFavorites"]));
+                return ((bool)(this["AutoRun"]));
             }
             set {
-                this["DisplayFavorites"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DisplayPreviewPan {
-            get {
-                return ((bool)(this["DisplayPreviewPan"]));
-            }
-            set {
-                this["DisplayPreviewPan"] = value;
+                this["AutoRun"] = value;
             }
         }
     }

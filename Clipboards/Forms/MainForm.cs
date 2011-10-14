@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using Microsoft.Win32;
 
 namespace Clipboards
 {
@@ -59,6 +60,29 @@ namespace Clipboards
 
             //Hooks
             RegisterClipboardViewer();
+
+            //Only one type of pan should be visibler at startup
+            splitContainerPreviewPan.Panel1Collapsed = false;
+            splitContainerPreviewPan.Panel1.Show();
+            splitContainerPreviewPan.Panel2Collapsed = true;
+            splitContainerPreviewPan.Panel2.Hide();
+
+            applySettingsToUI();
+
+            //AutoRun
+            // The path to the key where Windows looks for startup applications
+            RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            
+            if (rkApp.GetValue("Clipboards") == null)
+            {
+                // The value doesn't exist, the application is not set to run at startup
+                Properties.Settings.Default.AutoRun = false;
+            }
+            else
+            {
+                // The value exists, the application is set to run at startup
+                Properties.Settings.Default.AutoRun = true;
+            }
         }
         #endregion
 
@@ -350,11 +374,6 @@ namespace Clipboards
             }
         }
 
-        private void listBoxClips_DoubleClick(object sender, EventArgs e)
-        {
-
-        }
-
         private void listBoxClips_MouseClick(object sender, MouseEventArgs e)
         {
             int Index = listBoxClips.SelectedIndex;
@@ -548,16 +567,58 @@ namespace Clipboards
         {
             SettingsBox sBox = new SettingsBox();
             sBox.ShowDialog();
+            applySettingsToUI();
+            
         }
         #endregion
 
-        #region Tray icons callbacks
-        private void trayIcon_MouseClick(object sender, MouseEventArgs e)
+        private void applySettingsToUI()
         {
-            if (Visible) this.Hide();
-            else this.Show();
+            //Use Settings
+            if (Properties.Settings.Default.DisplayPreview)
+            {
+                splitContainer2.Panel1Collapsed = false;
+                splitContainer2.Panel1.Show();
+            }
+            else
+            {
+                splitContainer2.Panel1Collapsed = true;
+                splitContainer2.Panel1.Hide();
+            }
+
+            if (Properties.Settings.Default.DisplayFavorites)
+            {
+                splitContainer2.Panel2Collapsed = false;
+                splitContainer2.Panel2.Show();
+            }
+            else
+            {
+                splitContainer2.Panel2Collapsed = true;
+                splitContainer2.Panel2.Hide();
+            }
+        }
+
+        #region Tray icons callbacks
+        private void trayIcon_DoubleClick(object sender, EventArgs e)
+        {
+            this.Show();
+            trayIcon.Visible = false;
         }
         #endregion
-        
+
+        private void OnResize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                trayIcon.Visible = true;
+                Hide();
+                trayIcon.ShowBalloonTip(500);
+            }
+        }
+
+        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            trayIcon.Visible = false;
+        }
     }
 }
