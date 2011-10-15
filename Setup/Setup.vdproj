@@ -56,6 +56,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
         "Release"
@@ -331,21 +344,21 @@
             "Target" = "8:_A403FC925FBA46EBA78B11BA10625B68"
             "Folder" = "8:_544499E96FDE43448943CA9DD0028654"
             "WorkingFolder" = "8:_A0E2EE7812D74F4DB60B5457F4BA52D4"
-            "Icon" = "8:"
+            "Icon" = "8:_956B6D58786A453BA383E5D5008FB37B"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_8149F577FBBC47318CC7A84147927F26"
             {
             "Name" = "8:Clipboards"
             "Arguments" = "8:"
-            "Description" = "8:"
+            "Description" = "8:Advanced Clipboard Manager"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
             "Target" = "8:_A403FC925FBA46EBA78B11BA10625B68"
             "Folder" = "8:_F7F88E81454345AB881B400EBF4F76F8"
             "WorkingFolder" = "8:_A0E2EE7812D74F4DB60B5457F4BA52D4"
-            "Icon" = "8:"
+            "Icon" = "8:_956B6D58786A453BA383E5D5008FB37B"
             "Feature" = "8:"
             }
         }

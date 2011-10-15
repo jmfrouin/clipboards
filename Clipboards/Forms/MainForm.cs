@@ -601,8 +601,9 @@ namespace Clipboards
         #region Tray icons callbacks
         private void trayIcon_DoubleClick(object sender, EventArgs e)
         {
-            this.Show();
+            Show();
             trayIcon.Visible = false;
+            WindowState = FormWindowState.Normal;
         }
         #endregion
 

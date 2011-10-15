@@ -5,6 +5,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Drawing;
 
+//TODO: Test
 namespace Clipboards
 {
     public class ShellIcon
