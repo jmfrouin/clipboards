@@ -60,10 +60,21 @@ namespace Clipboards.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap WP_000379 {
+        /// <summary>
+        ///   Looks up a localized string similar to A new Clip of type bitmap has been capture !.
+        /// </summary>
+        internal static string ClipOfTypeImage {
             get {
-                object obj = ResourceManager.GetObject("WP_000379", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ResourceManager.GetString("ClipOfTypeImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A new Clip of type text has been capture !.
+        /// </summary>
+        internal static string ClipOfTypeText {
+            get {
+                return ResourceManager.GetString("ClipOfTypeText", resourceCulture);
             }
         }
     }

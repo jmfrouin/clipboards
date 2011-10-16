@@ -193,6 +193,7 @@ namespace Clipboards
 
                     ClipItem Item = new ClipItem(p.MainModule.FileName);
                     Item.Content = iData.GetData(DataFormats.StringFormat).ToString();
+                    trayIcon.ShowBalloonTip(500, Properties.Resources.ClipOfTypeText, Item.Content, ToolTipIcon.Info);
                     Item.Type = ClipItem.EType.eText;
                     if (fLocalCopy == false)
                     {
@@ -208,6 +209,7 @@ namespace Clipboards
                 //Handle Bitmap element
                 if (iData.GetDataPresent(DataFormats.Bitmap))
                 {
+                    trayIcon.ShowBalloonTip(500, Properties.Resources.ClipOfTypeImage, "", ToolTipIcon.Info);
                     IntPtr hwnd = APIFuncs.getforegroundWindow();
                     Int32 pid = APIFuncs.GetWindowProcessID(hwnd);
                     Process p = Process.GetProcessById(pid);
