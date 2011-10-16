@@ -66,7 +66,7 @@ namespace Clipboards
             splitContainerPreviewPan.Panel1.Show();
             splitContainerPreviewPan.Panel2Collapsed = true;
             splitContainerPreviewPan.Panel2.Hide();
-
+            
             applySettingsToUI();
 
             //AutoRun
@@ -525,16 +525,8 @@ namespace Clipboards
 
         private void toolStripButtonExpandPreviewPan_Click(object sender, EventArgs e)
         {
-            if (splitContainer2.Panel1Collapsed)
-            {
-                splitContainer2.Panel1Collapsed = false;
-                splitContainer2.Panel1.Show(); 
-            }
-            else 
-            {
-                splitContainer2.Panel1Collapsed = true;
-                splitContainer2.Panel1.Hide(); 
-            }
+          Properties.Settings.Default.DisplayPreview = !Properties.Settings.Default.DisplayPreview;
+          applySettingsToUI();
         }
 
         private void toolStripButtonAddFav_Click(object sender, EventArgs e)
@@ -551,58 +543,60 @@ namespace Clipboards
 
         private void toolStripFavorites_Click(object sender, EventArgs e)
         {
-            if (splitContainer2.Panel2Collapsed)
-            {
-                splitContainer2.Panel2Collapsed = false;
-                splitContainer2.Panel2.Show();
-            }
-            else
-            {
-                splitContainer2.Panel2Collapsed = true;
-                splitContainer2.Panel2.Hide();
-            }
+          Properties.Settings.Default.DisplayFavorites = !Properties.Settings.Default.DisplayFavorites;
+          applySettingsToUI();
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SettingsBox sBox = new SettingsBox();
-            sBox.ShowDialog();
-            applySettingsToUI();
-            
+          SettingsBox sBox = new SettingsBox();
+          sBox.ShowDialog();
+          applySettingsToUI();
         }
         #endregion
 
         private void applySettingsToUI()
         {
+          //If Preview & Favorites are closed, collapse pan.
+          if (!Properties.Settings.Default.DisplayFavorites && !Properties.Settings.Default.DisplayPreview)
+          {
+            splitContainer1.Panel1Collapsed = true;
+            splitContainer1.Panel1.Hide();
+          }
+          else
+          {
+            splitContainer1.Panel1Collapsed = false;
+            splitContainer1.Panel1.Show();
+
             //Use Settings
             if (Properties.Settings.Default.DisplayPreview)
             {
-                splitContainer2.Panel1Collapsed = false;
-                splitContainer2.Panel1.Show();
+              splitContainer2.Panel1Collapsed = false;
+              splitContainer2.Panel1.Show();
             }
             else
             {
-                splitContainer2.Panel1Collapsed = true;
-                splitContainer2.Panel1.Hide();
+              splitContainer2.Panel1Collapsed = true;
+              splitContainer2.Panel1.Hide();
             }
 
             if (Properties.Settings.Default.DisplayFavorites)
             {
-                splitContainer2.Panel2Collapsed = false;
-                splitContainer2.Panel2.Show();
+              splitContainer2.Panel2Collapsed = false;
+              splitContainer2.Panel2.Show();
             }
             else
             {
-                splitContainer2.Panel2Collapsed = true;
-                splitContainer2.Panel2.Hide();
+              splitContainer2.Panel2Collapsed = true;
+              splitContainer2.Panel2.Hide();
             }
+          }
         }
 
         #region Tray icons callbacks
         private void trayIcon_DoubleClick(object sender, EventArgs e)
         {
             Show();
-            trayIcon.Visible = false;
             WindowState = FormWindowState.Normal;
         }
         #endregion
@@ -611,7 +605,6 @@ namespace Clipboards
         {
             if (WindowState == FormWindowState.Minimized)
             {
-                trayIcon.Visible = true;
                 Hide();
                 trayIcon.ShowBalloonTip(500);
             }
@@ -619,7 +612,6 @@ namespace Clipboards
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
         {
-            trayIcon.Visible = false;
         }
     }
 }
