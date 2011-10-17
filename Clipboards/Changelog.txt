@@ -1,16 +1,47 @@
-﻿Version 0.5:
+﻿Version 0.11:
+FS#41 - Installation impossible sur intel core 2 Duo P9300 (32 bits)
+FS#39 - Minimise to Tray
+FS#38 - AutoRun
+FS#34 - Préférences
+FS#28 - Popups Ballon sur capture de Clip
+Dorénavant deux installeurs sont construits. 
+Un pour la version 32 bits, et un pour la version64.
+
+Version 0.10:
+FS#36 - Parfois toutes les lettres ne sont pas affichées dans le gestionnaire 
+FS#35 - Bug dans la mise à jour
+FS#33 - Le focus ne suit pas l'élément que l'on déplace (en changeant son ordre) 
+
+Version 0.09:
+- Le "Preview Pan", quand on clique sur un Clip, cela fait apparaître le contenu en taille réelle (texte complet, pour des Clip de type texte, image en taille plus grande pour des Clips de type image.
+FS#33 - Le focus ne suit pas l'élément que l'on déplace (en changeant son ordre)
+
+Version 0.08:
+Qui se voit:
+- Ajout d'un panel "Preview Pan" à gauche ne servant pas pour le moment, plus tard il affichera le contenu d'un Clip
+- Ajout d'un panel de "Favoris" au milieu fonctionnel
+- Ajout de deux boutons correspondant pour folder / unfolder ces deux nouveaux panel
+- Les boutons "Haut" et "Bas" fonctionne.
+Qui se voit pas:
+- Les fichiers sont sauvegardés au bon endroit : Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\" + Application.ProductName
+- La sérialisation binaire est propre et optimisée.
+
+Version 0.07:
+- First public release
+
+Version 0.05:
 - Add a menu
 - Add an AboutBox
 
-Version 0.4: 
+Version 0.04: 
 - Finally use the proper method of inserting app in ClipBoard's viewers chain !
 
-Version 0.3:
+Version 0.03:
 - Use a timer to check Clipboard
 - Use CTRL+V to call the app
 
-Version 0.2:
+Version 0.02:
 - Use CTRL+C to call the app
 
-Version 0.1: 
+Version 0.01: 
 - Initial release

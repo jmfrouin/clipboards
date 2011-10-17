@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clipboards", "Clipboards\Clipboards.csproj", "{73598776-6667-4AFF-A3D0-6BE8EF80CA2F}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{A9F2F223-F298-4455-8378-87424C4955B6}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup32", "Setup\Setup.vdproj", "{A9F2F223-F298-4455-8378-87424C4955B6}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup64", "Setup64\Setup64.vdproj", "{B22A7835-6155-47CF-B263-A93DE462CC1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{A9F2F223-F298-4455-8378-87424C4955B6}.Debug|x86.ActiveCfg = Debug
 		{A9F2F223-F298-4455-8378-87424C4955B6}.Release|Any CPU.ActiveCfg = Release
 		{A9F2F223-F298-4455-8378-87424C4955B6}.Release|x86.ActiveCfg = Release
+		{B22A7835-6155-47CF-B263-A93DE462CC1A}.Debug|Any CPU.ActiveCfg = Debug
+		{B22A7835-6155-47CF-B263-A93DE462CC1A}.Debug|x86.ActiveCfg = Debug
+		{B22A7835-6155-47CF-B263-A93DE462CC1A}.Release|Any CPU.ActiveCfg = Release
+		{B22A7835-6155-47CF-B263-A93DE462CC1A}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

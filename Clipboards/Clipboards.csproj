@@ -112,6 +112,12 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\Program.cs" />
+    <Compile Include="Forms\QuickPaste.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\QuickPaste.Designer.cs">
+      <DependentUpon>QuickPaste.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SettingsBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,6 +131,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\QuickPaste.resx">
+      <DependentUpon>QuickPaste.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SettingsBox.resx">
       <DependentUpon>SettingsBox.cs</DependentUpon>
