@@ -129,8 +129,8 @@ namespace Clipboards
                                 {
                                     if(Modifiers == APIFuncs.Constants.CTRL)
                                     {
-                                        this.Show();
-                                        this.Activate();
+                                        Show();
+                                        WindowState = FormWindowState.Normal;
                                         fCallFromHotkey = true;
                                     }
                                     break;
@@ -139,8 +139,9 @@ namespace Clipboards
                                 {
                                     if ((Modifiers == (APIFuncs.Constants.CTRL + APIFuncs.Constants.SHIFT)))
                                     {
-                                        this.Show();
-                                        this.Activate();
+                                        QuickPaste qp = new QuickPaste();
+                                        
+                                        qp.Show();
                                         fCallFromHotkey = true;
                                     }
                                     break;
@@ -209,13 +210,13 @@ namespace Clipboards
                 //Handle Bitmap element
                 if (iData.GetDataPresent(DataFormats.Bitmap))
                 {
-                    trayIcon.ShowBalloonTip(500, Properties.Resources.ClipOfTypeImage, "", ToolTipIcon.Info);
                     IntPtr hwnd = APIFuncs.getforegroundWindow();
                     Int32 pid = APIFuncs.GetWindowProcessID(hwnd);
                     Process p = Process.GetProcessById(pid);
 
                     ClipItem Item = new ClipItem(p.MainModule.FileName);
                     Item.Image = (Bitmap)iData.GetData(DataFormats.Bitmap);
+                    trayIcon.ShowBalloonTip(500, Properties.Resources.ClipOfTypeImage, Item.Image.Size.ToString(), ToolTipIcon.Info);
                     Item.Type = ClipItem.EType.eImage;
                     if (fLocalCopy == false)
                     {
@@ -496,7 +497,7 @@ namespace Clipboards
         
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void toolStripUp_Click(object sender, EventArgs e)
@@ -595,14 +596,6 @@ namespace Clipboards
           }
         }
 
-        #region Tray icons callbacks
-        private void trayIcon_DoubleClick(object sender, EventArgs e)
-        {
-            Show();
-            WindowState = FormWindowState.Normal;
-        }
-        #endregion
-
         private void OnResize(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Minimized)
@@ -615,5 +608,38 @@ namespace Clipboards
         private void OnFormClosing(object sender, FormClosingEventArgs e)
         {
         }
+
+        #region Tray icons callbacks
+        private void trayIcon_DoubleClick(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                Show();
+                WindowState = FormWindowState.Normal;
+            }
+            else
+            {
+                Hide();
+                WindowState = FormWindowState.Minimized;
+            }
+        }
+        
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AboutBox aBox = new AboutBox();
+            aBox.ShowDialog();
+        }
+
+        private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Show();
+            WindowState = FormWindowState.Normal;
+        }
+        #endregion
     }
 }
