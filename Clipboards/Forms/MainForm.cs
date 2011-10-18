@@ -578,6 +578,7 @@ namespace Clipboards
     private void toolStripButtonExpandPreviewPan_Click(object sender, EventArgs e)
     {
       Properties.Settings.Default.DisplayPreview = !Properties.Settings.Default.DisplayPreview;
+      Properties.Settings.Default.Save();
       applySettingsToUI();
     }
 
@@ -596,6 +597,7 @@ namespace Clipboards
     private void toolStripFavorites_Click(object sender, EventArgs e)
     {
       Properties.Settings.Default.DisplayFavorites = !Properties.Settings.Default.DisplayFavorites;
+      Properties.Settings.Default.Save();
       applySettingsToUI();
     }
 
@@ -675,12 +677,6 @@ namespace Clipboards
     private void quitToolStripMenuItem_Click(object sender, EventArgs e)
     {
       Close();
-    }
-
-    private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
-    {
-      AboutBox aBox = new AboutBox();
-      aBox.ShowDialog();
     }
 
     private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
