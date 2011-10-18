@@ -83,6 +83,9 @@ namespace Clipboards
                 // The value exists, the application is set to run at startup
                 Properties.Settings.Default.AutoRun = true;
             }
+
+            //Give focus 
+            ActiveControl = listBoxClips;
         }
         #endregion
 
@@ -119,6 +122,11 @@ namespace Clipboards
         {
             switch ((APIFuncs.Msgs)m.Msg)
             {
+                case APIFuncs.Msgs.WM_SETFOCUS:
+                    {
+                        IntPtr App = APIFuncs.GetActiveWindow();
+                        break;
+                    }
                 case APIFuncs.Msgs.WM_HOTKEY:
                     {
                         Keys key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);
@@ -127,8 +135,9 @@ namespace Clipboards
                         {
                             case Keys.E:
                                 {
-                                    if(Modifiers == APIFuncs.Constants.CTRL)
+                                    if (Modifiers == APIFuncs.Constants.CTRL)
                                     {
+                                        listBoxClips.SelectedIndex = listBoxClips.Items.Count - 1;
                                         Show();
                                         WindowState = FormWindowState.Normal;
                                         fCallFromHotkey = true;
@@ -140,7 +149,6 @@ namespace Clipboards
                                     if ((Modifiers == (APIFuncs.Constants.CTRL + APIFuncs.Constants.SHIFT)))
                                     {
                                         QuickPaste qp = new QuickPaste();
-                                        
                                         qp.Show();
                                         fCallFromHotkey = true;
                                     }
@@ -194,12 +202,12 @@ namespace Clipboards
 
                     ClipItem Item = new ClipItem(p.MainModule.FileName);
                     Item.Content = iData.GetData(DataFormats.StringFormat).ToString();
-                    trayIcon.ShowBalloonTip(500, Properties.Resources.ClipOfTypeText, Item.Content, ToolTipIcon.Info);
                     Item.Type = ClipItem.EType.eText;
                     if (fLocalCopy == false)
                     {
                         fClips.Add(Item);
                         listBoxClips.Items.Add(fClips.Count.ToString());
+                        trayIcon.ShowBalloonTip(500, Properties.Resources.ClipOfTypeText, Item.Content, ToolTipIcon.Info);
                     }
                     else 
                     {
@@ -216,12 +224,12 @@ namespace Clipboards
 
                     ClipItem Item = new ClipItem(p.MainModule.FileName);
                     Item.Image = (Bitmap)iData.GetData(DataFormats.Bitmap);
-                    trayIcon.ShowBalloonTip(500, Properties.Resources.ClipOfTypeImage, Item.Image.Size.ToString(), ToolTipIcon.Info);
                     Item.Type = ClipItem.EType.eImage;
                     if (fLocalCopy == false)
                     {
                         fClips.Add(Item);
                         listBoxClips.Items.Add(fClips.Count.ToString());
+                        trayIcon.ShowBalloonTip(500, Properties.Resources.ClipOfTypeImage, Item.Image.Size.ToString(), ToolTipIcon.Info);
                     }
                     else
                     {
@@ -229,14 +237,15 @@ namespace Clipboards
                     }
                 }
 
-                //Handle Bitmap element
+#warning Handle files element
+                /*
                 string[] type = iData.GetFormats();
                 int a = type.Length;
                 if (a == 3)
                 {
                     int b = 3;
                 }
-
+                */
             }
         }
         #endregion
@@ -282,54 +291,100 @@ namespace Clipboards
             }
         }
 
+        private void PasteFavorites()
+        {
+            int Index = listBoxFavorites.SelectedIndex;
+            ClipItem Clip = fFavorites[Index];
+            switch (Clip.Type)
+            {
+                case ClipItem.EType.eText:
+                    {
+                        fLocalCopy = true;
+                        DataObject data = new DataObject();
+                        data.SetData(DataFormats.Text, Clip.Content);
+                        Clipboard.Clear();
+                        Clipboard.SetDataObject(data);
+                        if (fCallFromHotkey)
+                        {
+                            fCallFromHotkey = false;
+                            Hide();
+                            SendKeys.SendWait("^v");
+                        }
+                        break;
+                    }
+                case ClipItem.EType.eImage:
+                    {
+                        fLocalCopy = true;
+                        DataObject data = new DataObject();
+                        data.SetData(DataFormats.Bitmap, Clip.Image);
+                        Clipboard.Clear();
+                        Clipboard.SetDataObject(data);
+                        if (fCallFromHotkey)
+                        {
+                            fCallFromHotkey = false;
+                            Hide();
+                            SendKeys.SendWait("^v");
+                        }
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }
+
         private void listBoxFavorites_KeyPress(object sender, KeyPressEventArgs e)
         {
             char c = e.KeyChar;
             if (c == 13)
             {
-                int Index = listBoxFavorites.SelectedIndex;
-                ClipItem Clip = fFavorites[Index];
-                switch (Clip.Type)
-                {
-                    case ClipItem.EType.eText:
-                        {
-                            fLocalCopy = true;
-                            DataObject data = new DataObject();
-                            data.SetData(DataFormats.Text, Clip.Content);
-                            Clipboard.Clear();
-                            Clipboard.SetDataObject(data);
-                            if (fCallFromHotkey)
-                            {
-                                fCallFromHotkey = false;
-                                this.Hide();
-                                SendKeys.SendWait("^v");
-                            }
-                            break;
-                        }
-                    case ClipItem.EType.eImage:
-                        {
-                            fLocalCopy = true;
-                            DataObject data = new DataObject();
-                            data.SetData(DataFormats.Bitmap, Clip.Image);
-                            Clipboard.Clear();
-                            Clipboard.SetDataObject(data);
-                            if (fCallFromHotkey)
-                            {
-                                fCallFromHotkey = false;
-                                this.Hide();
-                                SendKeys.SendWait("^v");
-                            }
-                            break;
-                        }
-                    default:
-                        break;
-                }
+                PasteFavorites();
             }
         }
 
         private void listBoxFavorites_DoubleClick(object sender, EventArgs e)
         {
+            PasteFavorites();
+        }
 
+        private void PasteClips()
+        {
+            int Index = listBoxClips.SelectedIndex;
+            ClipItem Clip = fClips[Index];
+            switch (Clip.Type)
+            {
+                case ClipItem.EType.eText:
+                    {
+                        fLocalCopy = true;
+                        DataObject data = new DataObject();
+                        data.SetData(DataFormats.Text, Clip.Content);
+                        Clipboard.Clear();
+                        Clipboard.SetDataObject(data);
+                        if (fCallFromHotkey)
+                        {
+                            fCallFromHotkey = false;
+                            Hide();
+                            SendKeys.SendWait("^v");
+                        }
+                        break;
+                    }
+                case ClipItem.EType.eImage:
+                    {
+                        fLocalCopy = true;
+                        DataObject data = new DataObject();
+                        data.SetData(DataFormats.Bitmap, Clip.Image);
+                        Clipboard.Clear();
+                        Clipboard.SetDataObject(data);
+                        if (fCallFromHotkey)
+                        {
+                            fCallFromHotkey = false;
+                            Hide();
+                            SendKeys.SendWait("^v");
+                        }
+                        break;
+                    }
+                default:
+                    break;
+            }
         }
 
         private void listBoxClips_KeyPress(object sender, KeyPressEventArgs e)
@@ -337,44 +392,13 @@ namespace Clipboards
             char c = e.KeyChar;
             if (c == 13)
             {
-                int Index = listBoxClips.SelectedIndex;
-                ClipItem Clip = fClips[Index];
-                switch (Clip.Type)
-                {
-                    case ClipItem.EType.eText:
-                        {
-                            fLocalCopy = true;
-                            DataObject data = new DataObject();
-                            data.SetData(DataFormats.Text, Clip.Content);
-                            Clipboard.Clear();
-                            Clipboard.SetDataObject(data);
-                            if (fCallFromHotkey)
-                            {
-                                fCallFromHotkey = false;
-                                this.Hide();
-                                SendKeys.SendWait("^v");
-                            }
-                            break;
-                        }
-                    case ClipItem.EType.eImage:
-                        {
-                            fLocalCopy = true;
-                            DataObject data = new DataObject();
-                            data.SetData(DataFormats.Bitmap, Clip.Image);
-                            Clipboard.Clear();
-                            Clipboard.SetDataObject(data);
-                            if (fCallFromHotkey)
-                            {
-                                fCallFromHotkey = false;
-                                this.Hide();
-                                SendKeys.SendWait("^v");
-                            }
-                            break;
-                        }
-                    default:
-                        break;
-                }
+                PasteClips();
             }
+        }
+
+        private void listBoxClips_DoubleClick(object sender, EventArgs e)
+        {
+            PasteClips();
         }
 
         private void listBoxClips_MouseClick(object sender, MouseEventArgs e)
@@ -487,11 +511,23 @@ namespace Clipboards
 
         private void toolStripDelete_Click(object sender, EventArgs e)
         {
-            int Index = listBoxClips.SelectedIndex;
-            if (Index != -1)
+            if (listBoxClips.Focused)
             {
-                fClips.RemoveAt(Index);
-                listBoxClips.Items.RemoveAt(Index);
+                int Index = listBoxClips.SelectedIndex;
+                if (Index != -1)
+                {
+                    fClips.RemoveAt(Index);
+                    listBoxClips.Items.RemoveAt(Index);
+                }
+            }
+            if (listBoxFavorites.Focused)
+            {
+                int Index = listBoxFavorites.SelectedIndex;
+                if (Index != -1)
+                {
+                    fClips.RemoveAt(Index);
+                    listBoxFavorites.Items.RemoveAt(Index);
+                }
             }
         }
         
@@ -601,7 +637,6 @@ namespace Clipboards
             if (WindowState == FormWindowState.Minimized)
             {
                 Hide();
-                trayIcon.ShowBalloonTip(500);
             }
         }
 
@@ -641,5 +676,34 @@ namespace Clipboards
             WindowState = FormWindowState.Normal;
         }
         #endregion
+
+        private void listBoxFav_MouseClick(object sender, MouseEventArgs e)
+        {
+            int Index = listBoxFavorites.SelectedIndex;
+            ClipItem Clip = fFavorites[Index];
+            switch (Clip.Type)
+            {
+                case ClipItem.EType.eImage:
+                    {
+                        splitContainerPreviewPan.Panel1Collapsed = false;
+                        splitContainerPreviewPan.Panel1.Show();
+                        splitContainerPreviewPan.Panel2Collapsed = true;
+                        splitContainerPreviewPan.Panel2.Hide();
+                        pictureBoxPreview.Image = Clip.Image;
+                        break;
+                    }
+                case ClipItem.EType.eText:
+                    {
+                        richTextBoxPreview.Text = Clip.Content;
+                        splitContainerPreviewPan.Panel1Collapsed = true;
+                        splitContainerPreviewPan.Panel1.Hide();
+                        splitContainerPreviewPan.Panel2Collapsed = false;
+                        splitContainerPreviewPan.Panel2.Show();
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }
     }
 }

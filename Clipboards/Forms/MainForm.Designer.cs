@@ -217,6 +217,7 @@
             this.listBoxClips.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBoxClips_MouseClick);
             this.listBoxClips.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.DrawItem);
             this.listBoxClips.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.MeasureItem);
+            this.listBoxClips.DoubleClick += new System.EventHandler(this.listBoxClips_DoubleClick);
             this.listBoxClips.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listBoxClips_KeyPress);
             // 
             // MainPanel
@@ -247,6 +248,7 @@
             this.splitContainer1.Size = new System.Drawing.Size(536, 272);
             this.splitContainer1.SplitterDistance = 354;
             this.splitContainer1.TabIndex = 3;
+            this.splitContainer1.TabStop = false;
             // 
             // splitContainer2
             // 
@@ -264,6 +266,7 @@
             this.splitContainer2.Size = new System.Drawing.Size(354, 272);
             this.splitContainer2.SplitterDistance = 162;
             this.splitContainer2.TabIndex = 0;
+            this.splitContainer2.TabStop = false;
             // 
             // splitContainerPreviewPan
             // 
@@ -281,6 +284,7 @@
             this.splitContainerPreviewPan.Size = new System.Drawing.Size(162, 272);
             this.splitContainerPreviewPan.SplitterDistance = 95;
             this.splitContainerPreviewPan.TabIndex = 0;
+            this.splitContainerPreviewPan.TabStop = false;
             // 
             // pictureBoxPreview
             // 
@@ -311,6 +315,7 @@
             this.listBoxFavorites.Name = "listBoxFavorites";
             this.listBoxFavorites.Size = new System.Drawing.Size(188, 272);
             this.listBoxFavorites.TabIndex = 0;
+            this.listBoxFavorites.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBoxFav_MouseClick);
             this.listBoxFavorites.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.FavDrawItem);
             this.listBoxFavorites.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.FavMeasureItem);
             this.listBoxFavorites.DoubleClick += new System.EventHandler(this.listBoxFavorites_DoubleClick);
