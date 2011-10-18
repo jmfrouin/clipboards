@@ -11,7 +11,6 @@
 "SccLocalPath" = "8:"
 "SccAuxPath" = "8:"
 "SccProvider" = "8:"
-"BackwardsCompatibleGUIDGeneration" = "8:TRUE"
     "Hierarchy"
     {
         "Entry"
@@ -214,14 +213,14 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Clipboards"
         "ProductCode" = "8:{026A4197-24DC-4D3F-BD4D-0ABB8672A9A1}"
-        "PackageCode" = "8:{9BF5E69C-EE7E-49FD-9066-88BDAEE30AB7}"
+        "PackageCode" = "8:{6BC09B9F-AB26-4E3D-8BD3-9DF9077BD8D4}"
         "UpgradeCode" = "8:{4ECB3B6F-BD7A-41D8-9688-CB0ECD4964D9}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.12"
+        "ProductVersion" = "8:0.13"
         "Manufacturer" = "8:Anneis"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.anneis.com/clipboards"
@@ -791,4 +790,5 @@
             }
         }
     }
+"BackwardsCompatibleGUIDGeneration" = "8:TRUE"
 }

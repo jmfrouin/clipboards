@@ -1,6 +1,9 @@
 ﻿Version 0.12:
 Amélioration du rendu d'un clip dans les listbox.
 FS#48 - Impossible de supprimer les favoris
+FS#47 - Impossible de coller
+FS#46 - La fenêtre About ne se lance pas depuis la fenêtre pincipale
+FS#33 - Le focus ne suit pas l'élément que l'on déplace (en changeant son ordre)
 
 Version 0.11:
 FS#41 - Installation impossible sur intel core 2 Duo P9300 (32 bits)
