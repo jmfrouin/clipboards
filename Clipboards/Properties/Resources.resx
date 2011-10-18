@@ -118,9 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ClipOfTypeImage" xml:space="preserve">
-    <value>A new Clip of type bitmap has been capture !</value>
+    <value>A new Clip of type bitmap has been captured !</value>
   </data>
   <data name="ClipOfTypeText" xml:space="preserve">
-    <value>A new Clip of type text has been capture !</value>
+    <value>A new Clip of type text has been captured !</value>
   </data>
 </root>

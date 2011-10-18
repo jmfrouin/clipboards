@@ -61,7 +61,7 @@ namespace Clipboards.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A new Clip of type bitmap has been capture !.
+        ///   Looks up a localized string similar to A new Clip of type bitmap has been captured !.
         /// </summary>
         internal static string ClipOfTypeImage {
             get {
@@ -70,7 +70,7 @@ namespace Clipboards.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A new Clip of type text has been capture !.
+        ///   Looks up a localized string similar to A new Clip of type text has been captured !.
         /// </summary>
         internal static string ClipOfTypeText {
             get {
