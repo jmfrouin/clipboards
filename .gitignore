@@ -2,3 +2,5 @@ bin
 obj
 Setup/Debug
 Setup/Release
+Setup64/Debug
+Setup64/Release
