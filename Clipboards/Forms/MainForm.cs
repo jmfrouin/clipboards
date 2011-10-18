@@ -26,6 +26,8 @@ namespace Clipboards
     private bool fCallFromHotkey;
 
     private string fSettingsFolder;
+
+    private bool fInitialRun;
     #endregion
 
     #region Ctor / Dtor
@@ -34,6 +36,7 @@ namespace Clipboards
       InitializeComponent();
       fLocalCopy = false;
       fCallFromHotkey = false;
+      fInitialRun = true;
 
       //Callbacks
       this.Load += new System.EventHandler(this.MainForm_Load);
@@ -162,9 +165,16 @@ namespace Clipboards
           }
         case APIFuncs.Msgs.WM_DRAWCLIPBOARD:
           {
-            InsertClip();
-            if (ClipboardViewerNext != System.IntPtr.Zero)
-              APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+            if (!fInitialRun)
+            {
+              InsertClip();
+              if (ClipboardViewerNext != System.IntPtr.Zero)
+                APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+            }
+            else
+            {
+              fInitialRun = false;
+            }
             break;
           }
         case APIFuncs.Msgs.WM_CHANGECBCHAIN:
@@ -528,7 +538,7 @@ namespace Clipboards
         int Index = listBoxFavorites.SelectedIndex;
         if (Index != -1)
         {
-          fClips.RemoveAt(Index);
+          fFavorites.RemoveAt(Index);
           listBoxFavorites.Items.RemoveAt(Index);
         }
       }
