@@ -155,6 +155,7 @@ namespace Clipboards
 
         public void Draw(Graphics g, Rectangle bounds, DrawItemState state, Font font)
         {
+            int origX = bounds.X + 2;
             int origY = bounds.Y + 2;
 
             //Before everything else, set Clipping region to avoid pb ! 
@@ -183,8 +184,8 @@ namespace Clipboards
                 //Draw the application icon  ! 
                 if (fOrigProgSmallIcon != null)
                 {
-                    int X = bounds.Width - 2 - fOrigProgSmallIcon.Width;
                     g.DrawImage(fOrigProgSmallIcon, bounds.X + 2, bounds.Y + 2);
+                    origX += fOrigProgSmallIcon.Width + 2;
                 }
 
                 //Draw text I/A
@@ -218,22 +219,21 @@ namespace Clipboards
                 tsRect.Width += 1;
                 g.DrawString(fTimeStamp.ToLongDateString(), font, tsBrush, tsRect);
                 tsX += (int)fTimeStampSize1.Width + 4;
-                if (fImage != null)
-                {
-                    tsRect.Y += tsRect.Height;
-                }
-                else
-                {
-                    tsRect.X = tsX;
-                }
+                tsRect.X = tsX;
                 g.DrawString(fTimeStamp.ToLongTimeString(), font, tsBrush, tsRect);
 
                 //Draw size infos
-                tsRect.Y += tsRect.Height + 2; ;
                 if (fImage != null)
-                    g.DrawString(fImage.Width.ToString() + "x" + fImage.Height.ToString() + "px", font, tsBrush, tsRect);
+                {
+                    tsRect.X = origX;
+                    tsRect.Y += tsRect.Height + 2;
+                    g.DrawString(fImage.Size.ToString(), font, tsBrush, tsRect);
+                }
                 if (fContent != string.Empty)
+                {
+                    tsRect.X += tsRect.Width + 2;
                     g.DrawString(fContent.Length.ToString() + "char(s).", font, tsBrush, tsRect);
+                }
             }
             else
             {

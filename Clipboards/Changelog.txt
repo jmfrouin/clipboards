@@ -1,4 +1,8 @@
-﻿Version 0.11:
+﻿Version 0.12:
+Amélioration du rendu d'un clip dans les listbox.
+FS#48 - Impossible de supprimer les favoris
+
+Version 0.11:
 FS#41 - Installation impossible sur intel core 2 Duo P9300 (32 bits)
 FS#39 - Minimise to Tray
 FS#38 - AutoRun
