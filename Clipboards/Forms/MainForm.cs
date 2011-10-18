@@ -414,7 +414,7 @@ namespace Clipboards
     private void listBoxClips_MouseClick(object sender, MouseEventArgs e)
     {
       int Index = listBoxClips.SelectedIndex;
-      if (Index != -1 && Index < (listBoxClips.Items.Count - 1))
+      if (Index != -1 && Index < listBoxClips.Items.Count)
       {
         ClipItem Clip = fClips[Index];
         switch (Clip.Type)
@@ -693,7 +693,7 @@ namespace Clipboards
     private void listBoxFav_MouseClick(object sender, MouseEventArgs e)
     {
       int Index = listBoxFavorites.SelectedIndex;
-      if (Index != -1 && Index < (listBoxFavorites.Items.Count - 1))
+      if (Index != -1 && Index < listBoxFavorites.Items.Count)
       {
         ClipItem Clip = fFavorites[Index];
         switch (Clip.Type)
