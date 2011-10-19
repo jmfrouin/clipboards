@@ -27,7 +27,10 @@ namespace Clipboards
 
     private string fSettingsFolder;
 
+    //To avoid catching system content @ launch
     private bool fInitialRun;
+
+    IntPtr fExtApp;
     #endregion
 
     #region Ctor / Dtor
@@ -37,6 +40,7 @@ namespace Clipboards
       fLocalCopy = false;
       fCallFromHotkey = false;
       fInitialRun = true;
+      fExtApp = IntPtr.Zero;
 
       //Callbacks
       this.Load += new System.EventHandler(this.MainForm_Load);
@@ -127,7 +131,7 @@ namespace Clipboards
       {
         case APIFuncs.Msgs.WM_SETFOCUS:
           {
-            IntPtr App = APIFuncs.GetActiveWindow();
+            fExtApp = APIFuncs.GetActiveWindow();
             break;
           }
         case APIFuncs.Msgs.WM_HOTKEY:
@@ -408,7 +412,44 @@ namespace Clipboards
 
     private void listBoxClips_DoubleClick(object sender, EventArgs e)
     {
-      PasteClips();
+      SetForegroundWindowInternal(fExtApp);
+      SendKeys.Send("^v");
+      //PasteClips();
+    }
+
+    /*
+     * http://www.codeguru.com/forum/showthread.php?t=474426
+     * http://stackoverflow.com/questions/46030/c-sharp-force-form-focus
+     * http://chabster.blogspot.com/2010/03/focus-and-window-activation-in-win32.html
+     */
+    void SetForegroundWindowInternal(IntPtr hWnd)
+    {
+      if(!::IsWindow(hWnd)) return;
+ 
+      //relation time of SetForegroundWindow lock
+      DWORD lockTimeOut = 0;
+      HWND  hCurrWnd = ::GetForegroundWindow();
+      DWORD dwThisTID = ::GetCurrentThreadId(),
+            dwCurrTID = ::GetWindowThreadProcessId(hCurrWnd,0);
+ 
+      //we need to bypass some limitations from Microsoft :)
+      if(dwThisTID != dwCurrTID)
+      {
+        ::AttachThreadInput(dwThisTID, dwCurrTID, TRUE);
+ 
+        ::SystemParametersInfo(SPI_GETFOREGROUNDLOCKTIMEOUT,0,&lockTimeOut,0);
+        ::SystemParametersInfo(SPI_SETFOREGROUNDLOCKTIMEOUT,0,0,SPIF_SENDWININICHANGE | SPIF_UPDATEINIFILE);
+ 
+        ::AllowSetForegroundWindow(ASFW_ANY);
+      }
+ 
+      ::SetForegroundWindow(hWnd);
+ 
+      if(dwThisTID != dwCurrTID)
+      {
+        ::SystemParametersInfo(SPI_SETFOREGROUNDLOCKTIMEOUT,0,(PVOID)lockTimeOut,SPIF_SENDWININICHANGE | SPIF_UPDATEINIFILE);
+        ::AttachThreadInput(dwThisTID, dwCurrTID, FALSE);
+      }
     }
 
     private void listBoxClips_MouseClick(object sender, MouseEventArgs e)

@@ -11,6 +11,7 @@
 "SccLocalPath" = "8:"
 "SccAuxPath" = "8:"
 "SccProvider" = "8:"
+"BackwardsCompatibleGUIDGeneration" = "8:TRUE"
     "Hierarchy"
     {
         "Entry"
@@ -213,7 +214,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Clipboards"
         "ProductCode" = "8:{026A4197-24DC-4D3F-BD4D-0ABB8672A9A1}"
-        "PackageCode" = "8:{6BC09B9F-AB26-4E3D-8BD3-9DF9077BD8D4}"
+        "PackageCode" = "8:{BC890A5A-762D-4C5F-916F-4AC7E68BED74}"
         "UpgradeCode" = "8:{4ECB3B6F-BD7A-41D8-9688-CB0ECD4964D9}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -762,7 +763,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A403FC925FBA46EBA78B11BA10625B68"
             {
-            "SourcePath" = "8:..\\Clipboards\\obj\\Release\\Clipboards.exe"
+            "SourcePath" = "8:..\\Clipboards\\obj\\x86\\Release\\Clipboards.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A0E2EE7812D74F4DB60B5457F4BA52D4"
@@ -790,5 +791,4 @@
             }
         }
     }
-"BackwardsCompatibleGUIDGeneration" = "8:TRUE"
 }
