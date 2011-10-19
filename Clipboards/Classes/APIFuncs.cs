@@ -55,6 +55,9 @@ namespace Clipboards
 
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
     public static extern IntPtr GetActiveWindow();
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    public static extern int SetForegroundWindow(IntPtr hWnd);
     #endregion
 
     #region User-defined Functions
