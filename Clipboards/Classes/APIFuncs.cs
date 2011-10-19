@@ -11,14 +11,30 @@ namespace Clipboards
   public class APIFuncs
   {
     #region Windows API Functions Declarations
-    private const int SW_HIDE = 0;
-    private const int SW_SHOW = 1;
+    public const int SW_HIDE = 0;
+    public const int SW_SHOWNORMAL = 1;
+    public const int SW_NORMAL = 1;
+    public const int SW_SHOWMINIMIZED = 2;
+    public const int SW_SHOWMAXIMIZED = 3;
+    public const int SW_MAXIMIZE = 3;
+    public const int SW_SHOWNOACTIVATE = 4;
+    public const int SW_SHOW = 5;
+    public const int SW_MINIMIZE = 6;
+    public const int SW_SHOWMINNOACTIVE = 7;
+    public const int SW_SHOWNA = 8;
+    public const int SW_RESTORE = 9;
+    public const int SW_SHOWDEFAULT = 10;
+    public const int SW_MAX = 10;
+
+    public const uint SPI_GETFOREGROUNDLOCKTIMEOUT = 0x2000;
+    public const uint SPI_SETFOREGROUNDLOCKTIMEOUT = 0x2001;
+    public const int SPIF_SENDCHANGE = 0x2;
 
     //Show / Hide a Window.
     [DllImport("user32.dll")]
-    private static extern int FindWindow(string className, string windowText);
+    public static extern int FindWindow(string className, string windowText);
     [DllImport("user32.dll")]
-    private static extern int ShowWindow(int hwnd, int command);
+    public static extern int ShowWindow(int hwnd, int command);
 
     //This Function is used to get Active Window Title...
     [DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
@@ -26,11 +42,11 @@ namespace Clipboards
 
     //This Function is used to get Handle for Active Window...
     [DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
-    private static extern IntPtr GetForegroundWindow();
+    public static extern IntPtr GetForegroundWindow();
 
     //This Function is used to get Active process ID...
     [DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
-    private static extern Int32 GetWindowThreadProcessId(IntPtr hWnd, out Int32 lpdwProcessId);
+    public static extern Int32 GetWindowThreadProcessId(IntPtr hWnd, out Int32 lpdwProcessId);
 
     //These functions are used to register / unregister hotkeys
     [DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
@@ -56,8 +72,26 @@ namespace Clipboards
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
     public static extern IntPtr GetActiveWindow();
 
-    [DllImport("user32.dll", CharSet = CharSet.Auto)]
-    public static extern int SetForegroundWindow(IntPtr hWnd);
+    //Win32 API calls necesary to raise an unowned processs main window
+    [DllImport("user32.dll")]
+    public static extern bool SetForegroundWindow(IntPtr hWnd);
+    [DllImport("user32.dll")]
+    public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+    [DllImport("user32.dll")]
+    public static extern bool IsIconic(IntPtr hWnd);
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr lpdwProcessId);
+    [DllImport("user32.dll")]
+    public static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
+    [DllImport("user32.dll")]
+    public static extern bool BringWindowToTop(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, Int32 nMaxCount);
+    [DllImport("User32.dll")]
+    public static extern IntPtr GetParent(IntPtr hWnd);
     #endregion
 
     #region User-defined Functions

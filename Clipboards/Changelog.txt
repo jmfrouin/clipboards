@@ -1,4 +1,7 @@
-﻿Version 0.12:
+﻿Version 0.13:
+
+
+Version 0.12:
 Amélioration du rendu d'un clip dans les listbox.
 FS#48 - Impossible de supprimer les favoris
 FS#47 - Impossible de coller

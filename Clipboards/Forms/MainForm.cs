@@ -418,37 +418,46 @@ namespace Clipboards
     }
 
     /*
-     * http://www.codeguru.com/forum/showthread.php?t=474426
-     * http://stackoverflow.com/questions/46030/c-sharp-force-form-focus
-     * http://chabster.blogspot.com/2010/03/focus-and-window-activation-in-win32.html
-     */
-    void SetForegroundWindowInternal(IntPtr hWnd)
+    * http://www.codeguru.com/forum/showthread.php?t=474426
+    * http://stackoverflow.com/questions/46030/c-sharp-force-form-focus
+    * http://chabster.blogspot.com/2010/03/focus-and-window-activation-in-win32.html
+    */
+    private void SetForegroundWindowInternal(IntPtr hwnd)
     {
-      if(!::IsWindow(hWnd)) return;
- 
-      //relation time of SetForegroundWindow lock
-      DWORD lockTimeOut = 0;
-      HWND  hCurrWnd = ::GetForegroundWindow();
-      DWORD dwThisTID = ::GetCurrentThreadId(),
-            dwCurrTID = ::GetWindowThreadProcessId(hCurrWnd,0);
- 
-      //we need to bypass some limitations from Microsoft :)
-      if(dwThisTID != dwCurrTID)
+      if (APIFuncs.IsIconic(hwnd))
+        APIFuncs.ShowWindowAsync(hwnd, APIFuncs.SW_RESTORE);
+
+      APIFuncs.ShowWindowAsync(hwnd, APIFuncs.SW_SHOW);
+
+      APIFuncs.SetForegroundWindow(hwnd);
+
+      // Code from Karl E. Peterson, www.mvps.org/vb/sample.htm
+      // Converted to Delphi by Ray Lischner
+      // Published in The Delphi Magazine 55, page 16
+      // Converted to C# by Kevin Gale
+      IntPtr foregroundWindow = APIFuncs.GetForegroundWindow();
+      IntPtr Dummy = IntPtr.Zero;
+
+      uint foregroundThreadId = APIFuncs.GetWindowThreadProcessId(foregroundWindow, Dummy);
+      uint thisThreadId = APIFuncs.GetWindowThreadProcessId(hwnd, Dummy);
+
+      if (APIFuncs.AttachThreadInput(thisThreadId, foregroundThreadId, true))
       {
-        ::AttachThreadInput(dwThisTID, dwCurrTID, TRUE);
- 
-        ::SystemParametersInfo(SPI_GETFOREGROUNDLOCKTIMEOUT,0,&lockTimeOut,0);
-        ::SystemParametersInfo(SPI_SETFOREGROUNDLOCKTIMEOUT,0,0,SPIF_SENDWININICHANGE | SPIF_UPDATEINIFILE);
- 
-        ::AllowSetForegroundWindow(ASFW_ANY);
+        APIFuncs.BringWindowToTop(hwnd); // IE 5.5 related hack
+        APIFuncs.SetForegroundWindow(hwnd);
+        APIFuncs.AttachThreadInput(thisThreadId, foregroundThreadId, false);
       }
- 
-      ::SetForegroundWindow(hWnd);
- 
-      if(dwThisTID != dwCurrTID)
+
+      if (APIFuncs.GetForegroundWindow() != hwnd)
       {
-        ::SystemParametersInfo(SPI_SETFOREGROUNDLOCKTIMEOUT,0,(PVOID)lockTimeOut,SPIF_SENDWININICHANGE | SPIF_UPDATEINIFILE);
-        ::AttachThreadInput(dwThisTID, dwCurrTID, FALSE);
+        // Code by Daniel P. Stasinski
+        // Converted to C# by Kevin Gale
+        IntPtr Timeout = IntPtr.Zero;
+        APIFuncs.SystemParametersInfo(APIFuncs.SPI_GETFOREGROUNDLOCKTIMEOUT, 0, Timeout, 0);
+        APIFuncs.SystemParametersInfo(APIFuncs.SPI_SETFOREGROUNDLOCKTIMEOUT, 0, Dummy, APIFuncs.SPIF_SENDCHANGE);
+        APIFuncs.BringWindowToTop(hwnd); // IE 5.5 related hack
+        APIFuncs.SetForegroundWindow(hwnd);
+        APIFuncs.SystemParametersInfo(APIFuncs.SPI_SETFOREGROUNDLOCKTIMEOUT, 0, Timeout, APIFuncs.SPIF_SENDCHANGE);
       }
     }
 
