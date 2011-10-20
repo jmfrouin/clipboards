@@ -206,6 +206,7 @@
           // 
           // listBoxClips
           // 
+          this.listBoxClips.AllowDrop = true;
           this.listBoxClips.BackColor = System.Drawing.Color.White;
           this.listBoxClips.Dock = System.Windows.Forms.DockStyle.Fill;
           this.listBoxClips.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
@@ -221,8 +222,10 @@
           this.listBoxClips.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBoxClips_DragEnter);
           this.listBoxClips.DragOver += new System.Windows.Forms.DragEventHandler(this.listBoxClips_DragOver);
           this.listBoxClips.DragLeave += new System.EventHandler(this.listBoxClips_DragLeave);
+          this.listBoxClips.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.listBoxClips_QueryContinueDrag);
           this.listBoxClips.DoubleClick += new System.EventHandler(this.listBoxClips_DoubleClick);
           this.listBoxClips.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listBoxClips_KeyPress);
+          this.listBoxClips.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBoxClips_MouseDown);
           // 
           // MainPanel
           // 
@@ -311,6 +314,7 @@
           // 
           // listBoxFavorites
           // 
+          this.listBoxFavorites.AllowDrop = true;
           this.listBoxFavorites.BackColor = System.Drawing.Color.White;
           this.listBoxFavorites.Dock = System.Windows.Forms.DockStyle.Fill;
           this.listBoxFavorites.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
@@ -326,8 +330,10 @@
           this.listBoxFavorites.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBoxFavorites_DragEnter);
           this.listBoxFavorites.DragOver += new System.Windows.Forms.DragEventHandler(this.listBoxFavorites_DragOver);
           this.listBoxFavorites.DragLeave += new System.EventHandler(this.listBoxFavorites_DragLeave);
+          this.listBoxFavorites.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.listBoxFav_QueryContinueDrag);
           this.listBoxFavorites.DoubleClick += new System.EventHandler(this.listBoxFavorites_DoubleClick);
           this.listBoxFavorites.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listBoxFavorites_KeyPress);
+          this.listBoxFavorites.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBoxFav_MouseDown);
           // 
           // menuStrip1
           // 

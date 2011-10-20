@@ -32,6 +32,11 @@ namespace Clipboards
     private bool fInitialRun;
 
     IntPtr fExtApp;
+
+    //Drag & Drop stuff
+    private int fIndexOfItemUnderMouseToDrop;
+    private int fIndexOfItemUnderMouseToDrag;
+    private Point fScreenOffset;
     #endregion
 
     #region Ctor / Dtor
@@ -810,12 +815,26 @@ namespace Clipboards
 
     private void listBoxFavorites_DragDrop(object sender, DragEventArgs e)
     {
-
+      if (e.Data.GetDataPresent(DataFormats.StringFormat))
+      {
+        if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxFavorites.Items.Count)
+        {
+          listBoxFavorites.Items.Insert(fIndexOfItemUnderMouseToDrop, e.Data.GetData(DataFormats.Text));
+        }
+        else
+        {
+          // add the selected string to bottom of list
+          listBoxFavorites.Items.Add(e.Data.GetData(DataFormats.Text));
+        }
+      }
     }
 
     private void listBoxFavorites_DragEnter(object sender, DragEventArgs e)
     {
-
+			if (e.Data.GetDataPresent(DataFormats.StringFormat) && (e.AllowedEffect == DragDropEffects.Copy)) 
+				e.Effect = DragDropEffects.Copy;
+			else
+				e.Effect = DragDropEffects.Move;
     }
 
     private void listBoxFavorites_DragLeave(object sender, EventArgs e)
@@ -825,17 +844,74 @@ namespace Clipboards
 
     private void listBoxFavorites_DragOver(object sender, DragEventArgs e)
     {
+      fIndexOfItemUnderMouseToDrop = listBoxFavorites.IndexFromPoint(listBoxFavorites.PointToClient(new Point(e.X, e.Y)));
 
+      if (fIndexOfItemUnderMouseToDrop != ListBox.NoMatches)
+      {
+        listBoxFavorites.SelectedIndex = fIndexOfItemUnderMouseToDrop;
+      }
+      else
+      {
+        listBoxFavorites.SelectedIndex = fIndexOfItemUnderMouseToDrop;
+      }
+
+      if (e.Effect == DragDropEffects.Move)
+        listBoxFavorites.Items.Remove((string)e.Data.GetData(DataFormats.Text));
+    }
+
+    private void listBoxFav_MouseDown(object sender, MouseEventArgs e)
+    {
+      int indexOfItem = listBoxFavorites.IndexFromPoint(e.X, e.Y);
+      if (indexOfItem >= 0 && indexOfItem < listBoxFavorites.Items.Count)
+      {
+        listBoxFavorites.DoDragDrop(listBoxFavorites.Items[indexOfItem], DragDropEffects.Move);
+      }
+    }
+
+    private void listBoxFav_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
+    {
+      fScreenOffset = SystemInformation.WorkingArea.Location;
+
+      ListBox lb = sender as ListBox;
+
+      if (lb != null)
+      {
+        Form f = lb.FindForm();
+        // Cancel the drag if the mouse moves off the form. The screenOffset
+        // takes into account any desktop bands that may be at the top or left
+        // side of the screen.
+        if (((Control.MousePosition.X - fScreenOffset.X) < f.DesktopBounds.Left) ||
+          ((Control.MousePosition.X - fScreenOffset.X) > f.DesktopBounds.Right) ||
+          ((Control.MousePosition.Y - fScreenOffset.Y) < f.DesktopBounds.Top) ||
+          ((Control.MousePosition.Y - fScreenOffset.Y) > f.DesktopBounds.Bottom))
+        {
+          e.Action = DragAction.Cancel;
+        }
+      }
     }
 
     private void listBoxClips_DragDrop(object sender, DragEventArgs e)
     {
-
+      if (e.Data.GetDataPresent(DataFormats.StringFormat))
+      {
+        if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxClips.Items.Count)
+        {
+          listBoxClips.Items.Insert(fIndexOfItemUnderMouseToDrop, e.Data.GetData(DataFormats.Text));
+        }
+        else
+        {
+          // add the selected string to bottom of list
+          listBoxClips.Items.Add(e.Data.GetData(DataFormats.Text));
+        }
+      }
     }
 
     private void listBoxClips_DragEnter(object sender, DragEventArgs e)
     {
-
+      if (e.Data.GetDataPresent(DataFormats.StringFormat) && (e.AllowedEffect == DragDropEffects.Copy))
+        e.Effect = DragDropEffects.Copy;
+      else
+        e.Effect = DragDropEffects.Move;
     }
 
     private void listBoxClips_DragLeave(object sender, EventArgs e)
@@ -845,7 +921,50 @@ namespace Clipboards
 
     private void listBoxClips_DragOver(object sender, DragEventArgs e)
     {
+      fIndexOfItemUnderMouseToDrop = listBoxClips.IndexFromPoint(listBoxClips.PointToClient(new Point(e.X, e.Y)));
 
+      if (fIndexOfItemUnderMouseToDrop != ListBox.NoMatches)
+      {
+        listBoxClips.SelectedIndex = fIndexOfItemUnderMouseToDrop;
+      }
+      else
+      {
+        listBoxClips.SelectedIndex = fIndexOfItemUnderMouseToDrop;
+      }
+
+      if (e.Effect == DragDropEffects.Move)
+        listBoxClips.Items.Remove((string)e.Data.GetData(DataFormats.Text));
+    }
+
+    private void listBoxClips_MouseDown(object sender, MouseEventArgs e)
+    {
+      int indexOfItem = listBoxClips.IndexFromPoint(e.X, e.Y);
+      if (indexOfItem >= 0 && indexOfItem < listBoxClips.Items.Count)
+      {
+        listBoxClips.DoDragDrop(listBoxClips.Items[indexOfItem], DragDropEffects.Move);
+      }
+    }
+
+    private void listBoxClips_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
+    {
+      fScreenOffset = SystemInformation.WorkingArea.Location;
+
+      ListBox lb = sender as ListBox;
+
+      if (lb != null)
+      {
+        Form f = lb.FindForm();
+        // Cancel the drag if the mouse moves off the form. The screenOffset
+        // takes into account any desktop bands that may be at the top or left
+        // side of the screen.
+        if (((Control.MousePosition.X - fScreenOffset.X) < f.DesktopBounds.Left) ||
+          ((Control.MousePosition.X - fScreenOffset.X) > f.DesktopBounds.Right) ||
+          ((Control.MousePosition.Y - fScreenOffset.Y) < f.DesktopBounds.Top) ||
+          ((Control.MousePosition.Y - fScreenOffset.Y) > f.DesktopBounds.Bottom))
+        {
+          e.Action = DragAction.Cancel;
+        }
+      }
     }
     #endregion
   }
