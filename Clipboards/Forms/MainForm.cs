@@ -786,5 +786,67 @@ namespace Clipboards
         int a = 2;
       }*/
     }
+
+    #region Drap & Drop stuff
+    private void OnDragEnter(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void OnDragLeave(object sender, EventArgs e)
+    {
+
+    }
+
+    private void OnDragOver(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void OnDragDrop(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void listBoxFavorites_DragDrop(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void listBoxFavorites_DragEnter(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void listBoxFavorites_DragLeave(object sender, EventArgs e)
+    {
+
+    }
+
+    private void listBoxFavorites_DragOver(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void listBoxClips_DragDrop(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void listBoxClips_DragEnter(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void listBoxClips_DragLeave(object sender, EventArgs e)
+    {
+
+    }
+
+    private void listBoxClips_DragOver(object sender, DragEventArgs e)
+    {
+
+    }
+    #endregion
   }
 }
