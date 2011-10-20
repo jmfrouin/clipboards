@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using Microsoft.Win32;
+using System.Text;
 
 namespace Clipboards
 {
@@ -210,7 +211,7 @@ namespace Clipboards
         //Handle TXT clipboard
         if (iData.GetDataPresent(DataFormats.Text))
         {
-          IntPtr hwnd = APIFuncs.getforegroundWindow();
+          IntPtr hwnd = APIFuncs.GetForegroundWindow();
           Int32 pid = APIFuncs.GetWindowProcessID(hwnd);
           Process p = Process.GetProcessById(pid);
 
@@ -232,7 +233,7 @@ namespace Clipboards
         //Handle Bitmap element
         if (iData.GetDataPresent(DataFormats.Bitmap))
         {
-          IntPtr hwnd = APIFuncs.getforegroundWindow();
+          IntPtr hwnd = APIFuncs.GetForegroundWindow();
           Int32 pid = APIFuncs.GetWindowProcessID(hwnd);
           Process p = Process.GetProcessById(pid);
 
@@ -412,7 +413,10 @@ namespace Clipboards
 
     private void listBoxClips_DoubleClick(object sender, EventArgs e)
     {
-      SetForegroundWindowInternal(fExtApp);
+      IntPtr Temp = (IntPtr)462908;
+      int nProcessID = Process.GetCurrentProcess().Id;
+    
+      SetForegroundWindowInternal(Temp); //fExtApp);
       SendKeys.Send("^v");
       //PasteClips();
     }
@@ -766,6 +770,21 @@ namespace Clipboards
             break;
         }
       }
+    }
+
+    private void trayIcon_MouseClick(object sender, MouseEventArgs e)
+    {
+      /*const int nChars = 256;
+      IntPtr handle = IntPtr.Zero;
+      StringBuilder Buff = new StringBuilder(nChars);
+
+      handle = APIFuncs.GetForegroundWindow();
+
+      if (APIFuncs.GetWindowText(handle, Buff, nChars) > 0)
+      {
+        string temp = Buff.ToString();
+        int a = 2;
+      }*/
     }
   }
 }

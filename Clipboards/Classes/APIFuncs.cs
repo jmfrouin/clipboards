@@ -92,6 +92,12 @@ namespace Clipboards
     public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, Int32 nMaxCount);
     [DllImport("User32.dll")]
     public static extern IntPtr GetParent(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    public static extern int GetWindowText(int hWnd, StringBuilder text, int count);
+
+    [DllImport("user32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
+    internal static extern IntPtr SetFocus(IntPtr hwnd);
     #endregion
 
     #region User-defined Functions
@@ -102,15 +108,11 @@ namespace Clipboards
       GetWindowThreadProcessId(hwnd, out pid);
       return pid;
     }
-    public static IntPtr getforegroundWindow()
-    {
-      //This method is used to get Handle for Active Window using GetForegroundWindow() method present in user32.dll
-      return GetForegroundWindow();
-    }
+
     public static string ActiveApplTitle()
     {
       //This method is used to get active application's title using GetWindowText() method present in user32.dll
-      IntPtr hwnd = getforegroundWindow();
+      IntPtr hwnd = GetForegroundWindow();
       if (hwnd.Equals(IntPtr.Zero)) return "";
       string lpText = new string((char)0, 100);
       int intLength = GetWindowText(hwnd, lpText, lpText.Length);

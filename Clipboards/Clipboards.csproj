@@ -186,7 +186,6 @@
   <ItemGroup>
     <Content Include="Changelog.txt" />
     <Content Include="Clipboards.ico" />
-    <None Include="Resources\WP_000379.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
