@@ -826,10 +826,10 @@ namespace Clipboards
       {
         if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxFavorites.Items.Count)
         {
-          ClipItem Clip = fClips[0];
+          ClipItem Clip = new ClipItem((string)(e.Data.GetData(DataFormats.Text)), true);
+          string Text = (string)e.Data.GetData(DataFormats.Text);
           fFavorites.Add(Clip);
           listBoxFavorites.Items.Add(fFavorites.Count.ToString());
-          listBoxFavorites.Items.Insert(fIndexOfItemUnderMouseToDrop, e.Data.GetData(DataFormats.Text));
         }
         else
         {
@@ -953,7 +953,7 @@ namespace Clipboards
       int indexOfItem = listBoxClips.IndexFromPoint(e.X, e.Y);
       if (indexOfItem >= 0 && indexOfItem < listBoxClips.Items.Count)
       {
-        listBoxClips.DoDragDrop(listBoxClips.Items[indexOfItem], DragDropEffects.Copy);
+        listBoxClips.DoDragDrop("Clipboards:" + indexOfItem.ToString(), DragDropEffects.Copy);
       }
     }
 

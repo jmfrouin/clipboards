@@ -92,11 +92,14 @@ namespace Clipboards
     #endregion
 
     #region Constructors
-    public ClipItem(string ep)
+    public ClipItem(string ep, bool fromClip = false)
     {
       fExePath = ep;
-      fOrigProgSmallIcon = ShellIcon.GetSmallIcon(ep).ToBitmap();
-      fOrigProgLargeIcon = ShellIcon.GetLargeIcon(ep).ToBitmap();
+      if (!fromClip)
+      {
+        fOrigProgSmallIcon = ShellIcon.GetSmallIcon(ep).ToBitmap();
+        fOrigProgLargeIcon = ShellIcon.GetLargeIcon(ep).ToBitmap();
+      }
     }
 
     public ClipItem(SerializationInfo info, StreamingContext ctxt)
