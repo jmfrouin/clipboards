@@ -271,16 +271,19 @@ namespace Clipboards
     #endregion
 
     #region Customized listboxes !
-    private void MeasureItem(object sender, MeasureItemEventArgs e)
+    private void listBoxClips_MeasureItem(object sender, MeasureItemEventArgs e)
     {
-      ClipItem Clip = fClips[e.Index];
-      int W = e.ItemWidth, H = e.ItemHeight;
-      Clip.Measure(e, listBoxClips.Font, ref W, ref H);
-      e.ItemWidth = W;
-      e.ItemHeight = H;
+      if (e.Index != -1 && e.Index < fClips.Count)
+      {
+        ClipItem Clip = fClips[e.Index];
+        int W = e.ItemWidth, H = e.ItemHeight;
+        Clip.Measure(e, listBoxClips.Font, ref W, ref H);
+        e.ItemWidth = W;
+        e.ItemHeight = H;
+      }
     }
 
-    private void DrawItem(object sender, DrawItemEventArgs e)
+    private void listBoxClips_DrawItem(object sender, DrawItemEventArgs e)
     {
       if (e.Index != -1 && e.Index < fClips.Count)
       {
@@ -291,18 +294,21 @@ namespace Clipboards
       }
     }
 
-    private void FavMeasureItem(object sender, MeasureItemEventArgs e)
+    private void listBoxFavorites_FavMeasureItem(object sender, MeasureItemEventArgs e)
     {
-      ClipItem Clip = fFavorites[e.Index];
-      int W = e.ItemWidth, H = e.ItemHeight;
-      Clip.Measure(e, listBoxFavorites.Font, ref W, ref H);
-      e.ItemWidth = W;
-      e.ItemHeight = H;
+      if (e.Index != -1 && e.Index < fFavorites.Count)
+      {
+        ClipItem Clip = fFavorites[e.Index];
+        int W = e.ItemWidth, H = e.ItemHeight;
+        Clip.Measure(e, listBoxFavorites.Font, ref W, ref H);
+        e.ItemWidth = W;
+        e.ItemHeight = H;
+      }
     }
 
-    private void FavDrawItem(object sender, DrawItemEventArgs e)
+    private void listBoxFavorites_FavDrawItem(object sender, DrawItemEventArgs e)
     {
-      if (e.Index != -1 && e.Index < fClips.Count)
+      if (e.Index != -1 && e.Index < fFavorites.Count)
       {
         Graphics g = e.Graphics;
         ClipItem Clip = fFavorites[e.Index];
@@ -420,7 +426,7 @@ namespace Clipboards
     {
       IntPtr Temp = (IntPtr)462908;
       int nProcessID = Process.GetCurrentProcess().Id;
-    
+
       SetForegroundWindowInternal(Temp); //fExtApp);
       SendKeys.Send("^v");
       //PasteClips();
@@ -472,7 +478,7 @@ namespace Clipboards
 
     private void listBoxClips_MouseClick(object sender, MouseEventArgs e)
     {
-      int Index = listBoxClips.SelectedIndex;
+      /*int Index = listBoxClips.SelectedIndex;
       if (Index != -1 && Index < listBoxClips.Items.Count)
       {
         ClipItem Clip = fClips[Index];
@@ -499,7 +505,7 @@ namespace Clipboards
           default:
             break;
         }
-      }
+      }*/
     }
     #endregion
 
@@ -745,9 +751,9 @@ namespace Clipboards
     }
     #endregion
 
-    private void listBoxFav_MouseClick(object sender, MouseEventArgs e)
+    private void listBoxFavorites_MouseClick(object sender, MouseEventArgs e)
     {
-      int Index = listBoxFavorites.SelectedIndex;
+      /*int Index = listBoxFavorites.SelectedIndex;
       if (Index != -1 && Index < listBoxFavorites.Items.Count)
       {
         ClipItem Clip = fFavorites[Index];
@@ -774,7 +780,7 @@ namespace Clipboards
           default:
             break;
         }
-      }
+      }*/
     }
 
     private void trayIcon_MouseClick(object sender, MouseEventArgs e)
@@ -793,6 +799,7 @@ namespace Clipboards
     }
 
     #region Drap & Drop stuff
+    //http://www.dotnetcurry.com/ShowArticle.aspx?ID=179&AspxAutoDetectCookieSupport=1
     private void OnDragEnter(object sender, DragEventArgs e)
     {
 
@@ -819,6 +826,9 @@ namespace Clipboards
       {
         if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxFavorites.Items.Count)
         {
+          ClipItem Clip = fClips[0];
+          fFavorites.Add(Clip);
+          listBoxFavorites.Items.Add(fFavorites.Count.ToString());
           listBoxFavorites.Items.Insert(fIndexOfItemUnderMouseToDrop, e.Data.GetData(DataFormats.Text));
         }
         else
@@ -826,15 +836,16 @@ namespace Clipboards
           // add the selected string to bottom of list
           listBoxFavorites.Items.Add(e.Data.GetData(DataFormats.Text));
         }
+        listBoxFavorites.Refresh();
       }
     }
 
     private void listBoxFavorites_DragEnter(object sender, DragEventArgs e)
     {
-			if (e.Data.GetDataPresent(DataFormats.StringFormat) && (e.AllowedEffect == DragDropEffects.Copy)) 
-				e.Effect = DragDropEffects.Copy;
-			else
-				e.Effect = DragDropEffects.Move;
+      if (e.Data.GetDataPresent(DataFormats.StringFormat))
+        e.Effect = DragDropEffects.Copy;
+      else
+        e.Effect = DragDropEffects.None;
     }
 
     private void listBoxFavorites_DragLeave(object sender, EventArgs e)
@@ -850,25 +861,26 @@ namespace Clipboards
       {
         listBoxFavorites.SelectedIndex = fIndexOfItemUnderMouseToDrop;
       }
-      else
+      /*else
       {
-        listBoxFavorites.SelectedIndex = fIndexOfItemUnderMouseToDrop;
-      }
+        int Count = listBoxFavorites.Items.Count;
+        listBoxFavorites.SelectedIndex = (Count == 0) ? 1 : Count;
+      }*/
 
-      if (e.Effect == DragDropEffects.Move)
-        listBoxFavorites.Items.Remove((string)e.Data.GetData(DataFormats.Text));
+      /*if (e.Effect == DragDropEffects.Move)
+        listBoxFavorites.Items.Remove((string)e.Data.GetData(DataFormats.Text));*/
     }
 
-    private void listBoxFav_MouseDown(object sender, MouseEventArgs e)
+    private void listBoxFavorites_MouseDown(object sender, MouseEventArgs e)
     {
       int indexOfItem = listBoxFavorites.IndexFromPoint(e.X, e.Y);
       if (indexOfItem >= 0 && indexOfItem < listBoxFavorites.Items.Count)
       {
-        listBoxFavorites.DoDragDrop(listBoxFavorites.Items[indexOfItem], DragDropEffects.Move);
+        listBoxFavorites.DoDragDrop(listBoxFavorites.Items[indexOfItem], DragDropEffects.Copy);
       }
     }
 
-    private void listBoxFav_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
+    private void listBoxFavorites_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
     {
       fScreenOffset = SystemInformation.WorkingArea.Location;
 
@@ -908,10 +920,10 @@ namespace Clipboards
 
     private void listBoxClips_DragEnter(object sender, DragEventArgs e)
     {
-      if (e.Data.GetDataPresent(DataFormats.StringFormat) && (e.AllowedEffect == DragDropEffects.Copy))
+      if (e.Data.GetDataPresent(DataFormats.StringFormat))
         e.Effect = DragDropEffects.Copy;
       else
-        e.Effect = DragDropEffects.Move;
+        e.Effect = DragDropEffects.None;
     }
 
     private void listBoxClips_DragLeave(object sender, EventArgs e)
@@ -929,11 +941,11 @@ namespace Clipboards
       }
       else
       {
-        listBoxClips.SelectedIndex = fIndexOfItemUnderMouseToDrop;
+        listBoxClips.SelectedIndex = 0;
       }
 
-      if (e.Effect == DragDropEffects.Move)
-        listBoxClips.Items.Remove((string)e.Data.GetData(DataFormats.Text));
+      /*if (e.Effect == DragDropEffects.Move)
+        listBoxClips.Items.Remove((string)e.Data.GetData(DataFormats.Text));*/
     }
 
     private void listBoxClips_MouseDown(object sender, MouseEventArgs e)
@@ -941,7 +953,7 @@ namespace Clipboards
       int indexOfItem = listBoxClips.IndexFromPoint(e.X, e.Y);
       if (indexOfItem >= 0 && indexOfItem < listBoxClips.Items.Count)
       {
-        listBoxClips.DoDragDrop(listBoxClips.Items[indexOfItem], DragDropEffects.Move);
+        listBoxClips.DoDragDrop(listBoxClips.Items[indexOfItem], DragDropEffects.Copy);
       }
     }
 
