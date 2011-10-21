@@ -120,7 +120,7 @@ namespace Clipboards
       RestoreClips();
       //Register CTRL+SHIFT+D & CTRL+E
       //http://msdn.microsoft.com/en-us/library/windows/desktop/ms646279(v=vs.85).aspx
-      APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), APIFuncs.Constants.CTRL + APIFuncs.Constants.SHIFT, (int)'V');
+      //APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), APIFuncs.Constants.CTRL + APIFuncs.Constants.SHIFT, (int)'V');
       APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), APIFuncs.Constants.CTRL, (int)'E');
     }
 
