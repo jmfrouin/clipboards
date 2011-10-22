@@ -37,6 +37,8 @@ namespace Clipboards
     private int fIndexOfItemUnderMouseToDrop;
     private int fIndexOfItemUnderMouseToDrag;
     private Point fScreenOffset;
+    private bool fFromClips;
+    private bool fFromFavorites;
     #endregion
 
     #region Ctor / Dtor
@@ -47,6 +49,8 @@ namespace Clipboards
       fCallFromHotkey = false;
       fInitialRun = true;
       fExtApp = IntPtr.Zero;
+      fFromClips = false;
+      fFromFavorites = false;
 
       //Callbacks
       this.Load += new System.EventHandler(this.MainForm_Load);
@@ -824,20 +828,48 @@ namespace Clipboards
     {
       if (e.Data.GetDataPresent(DataFormats.StringFormat))
       {
-        if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxFavorites.Items.Count)
+
+        if (!fFromClips && !fFromFavorites)
         {
           ClipItem Clip = new ClipItem((string)(e.Data.GetData(DataFormats.Text)), true);
-          string Text = (string)e.Data.GetData(DataFormats.Text);
-          fFavorites.Add(Clip);
-          listBoxFavorites.Items.Add(fFavorites.Count.ToString());
-        }
-        else
-        {
           // add the selected string to bottom of list
+          fFavorites.Add(Clip);
           listBoxFavorites.Items.Add(e.Data.GetData(DataFormats.Text));
         }
+
+        if (fFromClips)
+        {
+          if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxClips.Items.Count)
+          {
+            int Index = 0;
+            try
+            {
+                Index = int.Parse((string)e.Data.GetData(DataFormats.Text));
+            }
+            catch(Exception)
+            {
+                  Console.WriteLine("Erreur de parsing");
+            }
+
+            ClipItem Clip = fClips[Index];
+            fFavorites.Add(Clip);
+            listBoxFavorites.Items.Add(fFavorites.Count.ToString());
+          }
+          fFromClips = false;
+        }
+
+        if (fFromFavorites)
+        {
+          if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxFavorites.Items.Count)
+          {
+          }
+          fFromFavorites = false;
+        }
+
+        //Refresh
         listBoxFavorites.Refresh();
       }
+      
     }
 
     private void listBoxFavorites_DragEnter(object sender, DragEventArgs e)
@@ -876,6 +908,7 @@ namespace Clipboards
       int indexOfItem = listBoxFavorites.IndexFromPoint(e.X, e.Y);
       if (indexOfItem >= 0 && indexOfItem < listBoxFavorites.Items.Count)
       {
+        fFromFavorites = true;
         listBoxFavorites.DoDragDrop(listBoxFavorites.Items[indexOfItem], DragDropEffects.Copy);
       }
     }
@@ -953,7 +986,8 @@ namespace Clipboards
       int indexOfItem = listBoxClips.IndexFromPoint(e.X, e.Y);
       if (indexOfItem >= 0 && indexOfItem < listBoxClips.Items.Count)
       {
-        listBoxClips.DoDragDrop("Clipboards:" + indexOfItem.ToString(), DragDropEffects.Copy);
+        fFromClips = true;
+        listBoxClips.DoDragDrop(indexOfItem.ToString(), DragDropEffects.Copy);
       }
     }
 
