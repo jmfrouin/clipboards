@@ -869,7 +869,6 @@ namespace Clipboards
         //Refresh
         listBoxFavorites.Refresh();
       }
-      
     }
 
     private void listBoxFavorites_DragEnter(object sender, DragEventArgs e)
@@ -909,7 +908,7 @@ namespace Clipboards
       if (indexOfItem >= 0 && indexOfItem < listBoxFavorites.Items.Count)
       {
         fFromFavorites = true;
-        listBoxFavorites.DoDragDrop(listBoxFavorites.Items[indexOfItem], DragDropEffects.Copy);
+        listBoxFavorites.DoDragDrop(indexOfItem.ToString(), DragDropEffects.Copy);
       }
     }
 
@@ -939,15 +938,46 @@ namespace Clipboards
     {
       if (e.Data.GetDataPresent(DataFormats.StringFormat))
       {
-        if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxClips.Items.Count)
+
+        if (!fFromClips && !fFromFavorites)
         {
-          listBoxClips.Items.Insert(fIndexOfItemUnderMouseToDrop, e.Data.GetData(DataFormats.Text));
-        }
-        else
-        {
+          ClipItem Clip = new ClipItem((string)(e.Data.GetData(DataFormats.Text)), true);
           // add the selected string to bottom of list
+          fClips.Add(Clip);
           listBoxClips.Items.Add(e.Data.GetData(DataFormats.Text));
         }
+
+        if (fFromFavorites)
+        {
+          if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxFavorites.Items.Count)
+          {
+            int Index = 0;
+            try
+            {
+              Index = int.Parse((string)e.Data.GetData(DataFormats.Text));
+            }
+            catch (Exception)
+            {
+              Console.WriteLine("Erreur de parsing");
+            }
+
+            ClipItem Clip = fFavorites[Index];
+            fClips.Add(Clip);
+            listBoxClips.Items.Add(fClips.Count.ToString());
+          }
+          fFromFavorites = false;
+        }
+
+        if (fFromClips)
+        {
+          if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxClips.Items.Count)
+          {
+          }
+          fFromClips = false;
+        }
+
+        //Refresh
+        listBoxClips.Refresh();
       }
     }
 
