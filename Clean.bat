@@ -7,3 +7,7 @@ del /S /Q Setup\Debug
 del /S /Q Setup64\Debug
 del /S /Q Setup\Release
 del /S /Q Setup64\Release
+del /S /Q DragDropLib\bin
+del /S /Q DragDropLib\obj
+
+pause

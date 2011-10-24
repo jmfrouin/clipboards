@@ -75,6 +75,9 @@ namespace Clipboards
     private SizeF fTimeStampSize1;
     private SizeF fTimeStampSize2;
     private DateTime fTimeStamp = DateTime.Now;
+
+
+    private int fCount = 0;
     #endregion
 
     #region Serialize
@@ -88,6 +91,7 @@ namespace Clipboards
       info.AddValue("OrigProgLargeIcon", this.fOrigProgLargeIcon);
       info.AddValue("ExePath", this.fExePath);
       info.AddValue("TimeStamp", this.fTimeStamp);
+      info.AddValue("Count", this.fCount);
     }
     #endregion
 
@@ -112,6 +116,7 @@ namespace Clipboards
       this.fOrigProgLargeIcon = (Image)info.GetValue("OrigProgLargeIcon", typeof(Image));
       this.fExePath = (string)info.GetValue("ExePath", typeof(string));
       this.fTimeStamp = (DateTime)info.GetValue("TimeStamp", typeof(DateTime));
+      this.fCount = (int)info.GetValue("Count", typeof(int));
     }
     #endregion
 

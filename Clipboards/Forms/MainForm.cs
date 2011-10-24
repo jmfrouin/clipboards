@@ -5,9 +5,11 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using System.Drawing.Drawing2D;
+using DragDropLib;
 using Microsoft.Win32;
-using System.Text;
+using ComIDataObject = System.Runtime.InteropServices.ComTypes.IDataObject;
+using DataObject = System.Windows.Forms.DataObject;
+using System.Drawing.Imaging;
 
 namespace Clipboards
 {
@@ -910,6 +912,36 @@ namespace Clipboards
         fFromFavorites = true;
         listBoxFavorites.DoDragDrop(indexOfItem.ToString(), DragDropEffects.Copy);
       }
+
+      Bitmap bmp = new Bitmap(100, 100, PixelFormat.Format32bppArgb);
+      using (Graphics g = Graphics.FromImage(bmp))
+      {
+        g.Clear(Color.Magenta);
+        using (Pen pen = new Pen(Color.Blue, 4f))
+        {
+          g.DrawEllipse(pen, 20, 20, 60, 60);
+        }
+      }
+
+      DataObject data = new DataObject(new DragDropLib.DataObject());
+
+      ShDragImage shdi = new ShDragImage();
+      Win32Size size;
+      size.cx = bmp.Width;
+      size.cy = bmp.Height;
+      shdi.sizeDragImage = size;
+      Point p = e.Location;
+      Win32Point wpt;
+      wpt.x = p.X;
+      wpt.y = p.Y;
+      shdi.ptOffset = wpt;
+      shdi.hbmpDragImage = bmp.GetHbitmap();
+      shdi.crColorKey = Color.Magenta.ToArgb();
+
+      IDragSourceHelper sourceHelper = (IDragSourceHelper)new DragDropHelper();
+      sourceHelper.InitializeFromBitmap(ref shdi, data);
+
+      DoDragDrop(data, DragDropEffects.Copy);
     }
 
     private void listBoxFavorites_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
@@ -979,19 +1011,32 @@ namespace Clipboards
         //Refresh
         listBoxClips.Refresh();
       }
+
+      Point p = Cursor.Position;
+      Win32Point wp;
+      wp.x = p.X;
+      wp.y = p.Y;
+      IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
+      dropHelper.Drop((ComIDataObject)e.Data, ref wp, (int)e.Effect);
     }
 
     private void listBoxClips_DragEnter(object sender, DragEventArgs e)
     {
-      if (e.Data.GetDataPresent(DataFormats.StringFormat))
-        e.Effect = DragDropEffects.Copy;
-      else
-        e.Effect = DragDropEffects.None;
+      if (e.Data.GetDataPresent(DataFormats.StringFormat)) e.Effect = DragDropEffects.Copy;
+      else e.Effect = DragDropEffects.None;
+
+      Point p = Cursor.Position;
+      Win32Point wp;
+      wp.x = p.X;
+      wp.y = p.Y;
+      IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
+      dropHelper.DragEnter(IntPtr.Zero, (ComIDataObject)e.Data, ref wp, (int)e.Effect);
     }
 
     private void listBoxClips_DragLeave(object sender, EventArgs e)
     {
-
+      IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
+      dropHelper.DragLeave();
     }
 
     private void listBoxClips_DragOver(object sender, DragEventArgs e)
@@ -1009,6 +1054,13 @@ namespace Clipboards
 
       /*if (e.Effect == DragDropEffects.Move)
         listBoxClips.Items.Remove((string)e.Data.GetData(DataFormats.Text));*/
+
+      Point p = Cursor.Position;
+      Win32Point wp;
+      wp.x = p.X;
+      wp.y = p.Y;
+      IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
+      dropHelper.DragOver(ref wp, (int)e.Effect);
     }
 
     private void listBoxClips_MouseDown(object sender, MouseEventArgs e)
@@ -1019,6 +1071,36 @@ namespace Clipboards
         fFromClips = true;
         listBoxClips.DoDragDrop(indexOfItem.ToString(), DragDropEffects.Copy);
       }
+
+      Bitmap bmp = new Bitmap(100, 100, PixelFormat.Format32bppArgb);
+      using (Graphics g = Graphics.FromImage(bmp))
+      {
+        g.Clear(Color.Magenta);
+        using (Pen pen = new Pen(Color.Blue, 4f))
+        {
+          g.DrawEllipse(pen, 20, 20, 60, 60);
+        }
+      }
+
+      DataObject data = new DataObject(new DragDropLib.DataObject());
+
+      ShDragImage shdi = new ShDragImage();
+      Win32Size size;
+      size.cx = bmp.Width;
+      size.cy = bmp.Height;
+      shdi.sizeDragImage = size;
+      Point p = e.Location;
+      Win32Point wpt;
+      wpt.x = p.X;
+      wpt.y = p.Y;
+      shdi.ptOffset = wpt;
+      shdi.hbmpDragImage = bmp.GetHbitmap();
+      shdi.crColorKey = Color.Magenta.ToArgb();
+
+      IDragSourceHelper sourceHelper = (IDragSourceHelper)new DragDropHelper();
+      sourceHelper.InitializeFromBitmap(ref shdi, data);
+
+      DoDragDrop(data, DragDropEffects.Copy);
     }
 
     private void listBoxClips_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
