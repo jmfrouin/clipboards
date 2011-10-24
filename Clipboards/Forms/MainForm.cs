@@ -913,6 +913,7 @@ namespace Clipboards
         listBoxFavorites.DoDragDrop(indexOfItem.ToString(), DragDropEffects.Copy);
       }
 
+#if ADVANCED_DRAG_AND_DROP
       Bitmap bmp = new Bitmap(100, 100, PixelFormat.Format32bppArgb);
       using (Graphics g = Graphics.FromImage(bmp))
       {
@@ -942,6 +943,7 @@ namespace Clipboards
       sourceHelper.InitializeFromBitmap(ref shdi, data);
 
       DoDragDrop(data, DragDropEffects.Copy);
+#endif
     }
 
     private void listBoxFavorites_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
@@ -1012,12 +1014,14 @@ namespace Clipboards
         listBoxClips.Refresh();
       }
 
+#if ADVANCED_DRAG_AND_DROP
       Point p = Cursor.Position;
       Win32Point wp;
       wp.x = p.X;
       wp.y = p.Y;
       IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
       dropHelper.Drop((ComIDataObject)e.Data, ref wp, (int)e.Effect);
+#endif
     }
 
     private void listBoxClips_DragEnter(object sender, DragEventArgs e)
@@ -1025,12 +1029,14 @@ namespace Clipboards
       if (e.Data.GetDataPresent(DataFormats.StringFormat)) e.Effect = DragDropEffects.Copy;
       else e.Effect = DragDropEffects.None;
 
+#if ADVANCED_DRAG_AND_DROP
       Point p = Cursor.Position;
       Win32Point wp;
       wp.x = p.X;
       wp.y = p.Y;
       IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
       dropHelper.DragEnter(IntPtr.Zero, (ComIDataObject)e.Data, ref wp, (int)e.Effect);
+#endif
     }
 
     private void listBoxClips_DragLeave(object sender, EventArgs e)
@@ -1055,12 +1061,14 @@ namespace Clipboards
       /*if (e.Effect == DragDropEffects.Move)
         listBoxClips.Items.Remove((string)e.Data.GetData(DataFormats.Text));*/
 
+#if ADVANCED_DRAG_AND_DROP
       Point p = Cursor.Position;
       Win32Point wp;
       wp.x = p.X;
       wp.y = p.Y;
       IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
       dropHelper.DragOver(ref wp, (int)e.Effect);
+#endif
     }
 
     private void listBoxClips_MouseDown(object sender, MouseEventArgs e)
@@ -1072,6 +1080,7 @@ namespace Clipboards
         listBoxClips.DoDragDrop(indexOfItem.ToString(), DragDropEffects.Copy);
       }
 
+#if ADVANCED_DRAG_AND_DROP
       Bitmap bmp = new Bitmap(100, 100, PixelFormat.Format32bppArgb);
       using (Graphics g = Graphics.FromImage(bmp))
       {
@@ -1101,6 +1110,7 @@ namespace Clipboards
       sourceHelper.InitializeFromBitmap(ref shdi, data);
 
       DoDragDrop(data, DragDropEffects.Copy);
+#endif
     }
 
     private void listBoxClips_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
