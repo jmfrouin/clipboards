@@ -358,7 +358,7 @@
           this.listBoxMFU.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.listBoxMFU_QueryContinueDrag);
           this.listBoxMFU.DoubleClick += new System.EventHandler(this.listBoxMFU_DoubleClick);
           this.listBoxMFU.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listBoxMFU_KeyPress);
-          this.listBoxMFU.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBoxMFU_Down);
+          this.listBoxMFU.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBoxMFU_MouseDown);
           // 
           // listBoxFavorites
           // 
@@ -372,8 +372,8 @@
           this.listBoxFavorites.Size = new System.Drawing.Size(242, 264);
           this.listBoxFavorites.TabIndex = 0;
           this.listBoxFavorites.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBoxFavorites_MouseClick);
-          this.listBoxFavorites.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBoxFavorites_FavDrawItem);
-          this.listBoxFavorites.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.listBoxFavorites_FavMeasureItem);
+          this.listBoxFavorites.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBoxFavorites_DrawItem);
+          this.listBoxFavorites.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.listBoxFavorites_MeasureItem);
           this.listBoxFavorites.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBoxFavorites_DragDrop);
           this.listBoxFavorites.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBoxFavorites_DragEnter);
           this.listBoxFavorites.DragOver += new System.Windows.Forms.DragEventHandler(this.listBoxFavorites_DragOver);

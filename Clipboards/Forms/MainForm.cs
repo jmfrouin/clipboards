@@ -23,6 +23,8 @@ namespace Clipboards
     List<ClipItem> fClips = new List<ClipItem>();
     //Liste de Clips Favoris
     List<ClipItem> fFavorites = new List<ClipItem>();
+    //Liste de Clips les plus utilisés
+    List<ClipItem> fMFU = new List<ClipItem>();
 
     //Pour gérer le cas où Clipboards, lui même, push quelque chose dans le ClipBoard system.
     private bool fLocalCopy;
@@ -41,6 +43,7 @@ namespace Clipboards
     private Point fScreenOffset;
     private bool fFromClips;
     private bool fFromFavorites;
+    private bool fFromMFU;
     #endregion
 
     #region Ctor / Dtor
@@ -53,6 +56,7 @@ namespace Clipboards
       fExtApp = IntPtr.Zero;
       fFromClips = false;
       fFromFavorites = false;
+      fFromMFU = false;
 
       //Callbacks
       this.Load += new System.EventHandler(this.MainForm_Load);
@@ -322,7 +326,7 @@ namespace Clipboards
       }
     }
 
-    private void listBoxFavorites_FavMeasureItem(object sender, MeasureItemEventArgs e)
+    private void listBoxFavorites_MeasureItem(object sender, MeasureItemEventArgs e)
     {
       if (e.Index != -1 && e.Index < fFavorites.Count)
       {
@@ -334,7 +338,7 @@ namespace Clipboards
       }
     }
 
-    private void listBoxFavorites_FavDrawItem(object sender, DrawItemEventArgs e)
+    private void listBoxFavorites_DrawItem(object sender, DrawItemEventArgs e)
     {
       if (e.Index != -1 && e.Index < fFavorites.Count)
       {
@@ -349,41 +353,7 @@ namespace Clipboards
     {
       int Index = listBoxFavorites.SelectedIndex;
       ClipItem Clip = fFavorites[Index];
-      switch (Clip.Type)
-      {
-        case ClipItem.EType.eText:
-          {
-            fLocalCopy = true;
-            DataObject data = new DataObject();
-            data.SetData(DataFormats.Text, Clip.Content);
-            Clipboard.Clear();
-            Clipboard.SetDataObject(data);
-            if (fCallFromHotkey)
-            {
-              fCallFromHotkey = false;
-              Hide();
-              SendKeys.SendWait("^v");
-            }
-            break;
-          }
-        case ClipItem.EType.eImage:
-          {
-            fLocalCopy = true;
-            DataObject data = new DataObject();
-            data.SetData(DataFormats.Bitmap, Clip.Image);
-            Clipboard.Clear();
-            Clipboard.SetDataObject(data);
-            if (fCallFromHotkey)
-            {
-              fCallFromHotkey = false;
-              Hide();
-              SendKeys.SendWait("^v");
-            }
-            break;
-          }
-        default:
-          break;
-      }
+      Paste(Clip);
     }
 
     private void listBoxFavorites_KeyPress(object sender, KeyPressEventArgs e)
@@ -404,13 +374,18 @@ namespace Clipboards
     {
       int Index = listBoxClips.SelectedIndex;
       ClipItem Clip = fClips[Index];
-      switch (Clip.Type)
+      Paste(Clip);
+    }
+
+    private void Paste(ClipItem clip)
+    {
+      switch (clip.Type)
       {
         case ClipItem.EType.eText:
           {
             fLocalCopy = true;
             DataObject data = new DataObject();
-            data.SetData(DataFormats.Text, Clip.Content);
+            data.SetData(DataFormats.Text, clip.Content);
             Clipboard.Clear();
             Clipboard.SetDataObject(data);
             if (fCallFromHotkey)
@@ -425,7 +400,7 @@ namespace Clipboards
           {
             fLocalCopy = true;
             DataObject data = new DataObject();
-            data.SetData(DataFormats.Bitmap, Clip.Image);
+            data.SetData(DataFormats.Bitmap, clip.Image);
             Clipboard.Clear();
             Clipboard.SetDataObject(data);
             if (fCallFromHotkey)
@@ -853,7 +828,7 @@ namespace Clipboards
       if (e.Data.GetDataPresent(DataFormats.StringFormat))
       {
 
-        if (!fFromClips && !fFromFavorites)
+        if (!fFromMFU && !fFromClips && !fFromFavorites)
         {
           ClipItem Clip = new ClipItem((string)(e.Data.GetData(DataFormats.Text)), true);
           // add the selected string to bottom of list
@@ -995,7 +970,7 @@ namespace Clipboards
       if (e.Data.GetDataPresent(DataFormats.StringFormat))
       {
 
-        if (!fFromClips && !fFromFavorites)
+        if (!fFromMFU && !fFromClips && !fFromFavorites)
         {
           ClipItem Clip = new ClipItem((string)(e.Data.GetData(DataFormats.Text)), true);
           // add the selected string to bottom of list
@@ -1160,58 +1135,222 @@ namespace Clipboards
 
     private void listBoxMFU_DoubleClick(object sender, EventArgs e)
     {
-
+      PasteMFU();
     }
 
     private void listBoxMFU_DragDrop(object sender, DragEventArgs e)
     {
+      if (e.Data.GetDataPresent(DataFormats.StringFormat))
+      {
+        if (!fFromMFU && !fFromClips && !fFromFavorites)
+        {
+          ClipItem Clip = new ClipItem((string)(e.Data.GetData(DataFormats.Text)), true);
+          // add the selected string to bottom of list
+          fMFU.Add(Clip);
+          listBoxMFU.Items.Add(e.Data.GetData(DataFormats.Text));
+        }
 
+        if (fFromClips)
+        {
+          if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxClips.Items.Count)
+          {
+            int Index = 0;
+            try
+            {
+              Index = int.Parse((string)e.Data.GetData(DataFormats.Text));
+            }
+            catch (Exception)
+            {
+              Console.WriteLine("Erreur de parsing");
+            }
+
+            ClipItem Clip = fClips[Index];
+            fMFU.Add(Clip);
+            listBoxMFU.Items.Add(fMFU.Count.ToString());
+          }
+          fFromMFU = false;
+        }
+
+        if (fFromFavorites)
+        {
+          if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxFavorites.Items.Count)
+          {
+          }
+          fFromFavorites = false;
+        }
+
+        //Refresh
+        listBoxMFU.Refresh();
+      }
     }
 
     private void listBoxMFU_DragEnter(object sender, DragEventArgs e)
     {
-
+      if (e.Data.GetDataPresent(DataFormats.StringFormat))
+        e.Effect = DragDropEffects.Copy;
+      else
+        e.Effect = DragDropEffects.None;
     }
 
     private void listBoxMFU_DragLeave(object sender, EventArgs e)
     {
-
+      IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
+      dropHelper.DragLeave();
     }
 
     private void listBoxMFU_DragOver(object sender, DragEventArgs e)
     {
+      fIndexOfItemUnderMouseToDrop = listBoxMFU.IndexFromPoint(listBoxMFU.PointToClient(new Point(e.X, e.Y)));
 
+      if (fIndexOfItemUnderMouseToDrop != ListBox.NoMatches)
+      {
+        listBoxMFU.SelectedIndex = fIndexOfItemUnderMouseToDrop;
+      }
+      /*else
+      {
+        int Count = listBoxMFU.Items.Count;
+        listBoxMFU.SelectedIndex = (Count == 0) ? 1 : Count;
+      }*/
+
+      /*if (e.Effect == DragDropEffects.Move)
+        listBoxMFU.Items.Remove((string)e.Data.GetData(DataFormats.Text));*/
     }
 
     private void listBoxMFU_DrawItem(object sender, DrawItemEventArgs e)
     {
-
+      if (e.Index != -1 && e.Index < fMFU.Count)
+      {
+        Graphics g = e.Graphics;
+        ClipItem Clip = fMFU[e.Index];
+        Clip.Draw(g, e.Bounds, e.State, e.Font);
+        g.Dispose();
+      }
     }
 
     private void listBoxMFU_KeyPress(object sender, KeyPressEventArgs e)
     {
+      char c = e.KeyChar;
+      if (c == 13)
+      {
+        PasteMFU();
+      }
+    }
 
+    private void PasteMFU()
+    {
+      int Index = listBoxMFU.SelectedIndex;
+      ClipItem Clip = fMFU[Index];
+      Paste(Clip);
     }
 
     private void listBoxMFU_MeasureItem(object sender, MeasureItemEventArgs e)
     {
-
+      if (e.Index != -1 && e.Index < fMFU.Count)
+      {
+        ClipItem Clip = fMFU[e.Index];
+        int W = e.ItemWidth, H = e.ItemHeight;
+        Clip.Measure(e, listBoxMFU.Font, ref W, ref H);
+        e.ItemWidth = W;
+        e.ItemHeight = H;
+      }
     }
 
     private void listBoxMFU_MouseClick(object sender, MouseEventArgs e)
     {
-
+      /*int Index = listBoxMFU.SelectedIndex;
+      if (Index != -1 && Index < listBoxMFU.Items.Count)
+      {
+        ClipItem Clip = fMFU[Index];
+        switch (Clip.Type)
+        {
+          case ClipItem.EType.eImage:
+            {
+              splitContainerPreviewPan.Panel1Collapsed = false;
+              splitContainerPreviewPan.Panel1.Show();
+              splitContainerPreviewPan.Panel2Collapsed = true;
+              splitContainerPreviewPan.Panel2.Hide();
+              pictureBoxPreview.Image = Clip.Image;
+              break;
+            }
+          case ClipItem.EType.eText:
+            {
+              richTextBoxPreview.Text = Clip.Content;
+              splitContainerPreviewPan.Panel1Collapsed = true;
+              splitContainerPreviewPan.Panel1.Hide();
+              splitContainerPreviewPan.Panel2Collapsed = false;
+              splitContainerPreviewPan.Panel2.Show();
+              break;
+            }
+          default:
+            break;
+        }
+      }*/
     }
 
-    private void listBoxMFU_Down(object sender, MouseEventArgs e)
+    private void listBoxMFU_MouseDown(object sender, MouseEventArgs e)
     {
+      int indexOfItem = listBoxMFU.IndexFromPoint(e.X, e.Y);
+      if (indexOfItem >= 0 && indexOfItem < listBoxMFU.Items.Count)
+      {
+        fFromMFU = true;
+        listBoxMFU.DoDragDrop(indexOfItem.ToString(), DragDropEffects.Copy);
+      }
 
+#if ADVANCED_DRAG_AND_DROP
+      Bitmap bmp = new Bitmap(100, 100, PixelFormat.Format32bppArgb);
+      using (Graphics g = Graphics.FromImage(bmp))
+      {
+        g.Clear(Color.Magenta);
+        using (Pen pen = new Pen(Color.Blue, 4f))
+        {
+          g.DrawEllipse(pen, 20, 20, 60, 60);
+        }
+      }
+
+      DataObject data = new DataObject(new DragDropLib.DataObject());
+
+      ShDragImage shdi = new ShDragImage();
+      Win32Size size;
+      size.cx = bmp.Width;
+      size.cy = bmp.Height;
+      shdi.sizeDragImage = size;
+      Point p = e.Location;
+      Win32Point wpt;
+      wpt.x = p.X;
+      wpt.y = p.Y;
+      shdi.ptOffset = wpt;
+      shdi.hbmpDragImage = bmp.GetHbitmap();
+      shdi.crColorKey = Color.Magenta.ToArgb();
+
+      IDragSourceHelper sourceHelper = (IDragSourceHelper)new DragDropHelper();
+      sourceHelper.InitializeFromBitmap(ref shdi, data);
+
+      DoDragDrop(data, DragDropEffects.Copy);
+#endif
     }
 
     private void listBoxMFU_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
     {
+      fScreenOffset = SystemInformation.WorkingArea.Location;
 
+      ListBox lb = sender as ListBox;
+
+      if (lb != null)
+      {
+        Form f = lb.FindForm();
+        // Cancel the drag if the mouse moves off the form. The screenOffset
+        // takes into account any desktop bands that may be at the top or left
+        // side of the screen.
+        if (((Control.MousePosition.X - fScreenOffset.X) < f.DesktopBounds.Left) ||
+          ((Control.MousePosition.X - fScreenOffset.X) > f.DesktopBounds.Right) ||
+          ((Control.MousePosition.Y - fScreenOffset.Y) < f.DesktopBounds.Top) ||
+          ((Control.MousePosition.Y - fScreenOffset.Y) > f.DesktopBounds.Bottom))
+        {
+          e.Action = DragAction.Cancel;
+        }
+      }
     }
     #endregion
+
   }
 }
