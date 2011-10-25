@@ -25,7 +25,7 @@ namespace Clipboards.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool DisplayFavorites {
             get {
                 return ((bool)(this["DisplayFavorites"]));
@@ -37,7 +37,7 @@ namespace Clipboards.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool DisplayPreview {
             get {
                 return ((bool)(this["DisplayPreview"]));
@@ -68,6 +68,18 @@ namespace Clipboards.Properties {
             }
             set {
                 this["AutoRun"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AvoidDuplicate {
+            get {
+                return ((bool)(this["AvoidDuplicate"]));
+            }
+            set {
+                this["AvoidDuplicate"] = value;
             }
         }
     }
