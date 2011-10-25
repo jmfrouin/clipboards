@@ -76,8 +76,13 @@ namespace Clipboards
     private SizeF fTimeStampSize2;
     private DateTime fTimeStamp = DateTime.Now;
 
-
+    //To handle stats
     private int fCount = 0;
+    public int Count
+    {
+      get { return fCount; }
+      set { fCount = value; }
+    }
     #endregion
 
     #region Serialize
@@ -196,6 +201,15 @@ namespace Clipboards
           origX += fOrigProgSmallIcon.Width + 2;
         }
 
+        //Draw stats :o)
+        Rectangle tempStats = bounds;
+        if (fOrigProgSmallIcon != null)
+        {
+          tempStats.Y += fOrigProgSmallIcon.Height + 2;
+        }
+        Brush brush = new System.Drawing.SolidBrush(System.Drawing.Color.DarkGreen);
+        g.DrawString(fCount.ToString(), font, brush, tempStats);
+        
         //Draw text I/A
         if (fContent != string.Empty)
         {

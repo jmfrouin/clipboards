@@ -231,14 +231,36 @@ namespace Clipboards
           Item.Type = ClipItem.EType.eText;
           if (fLocalCopy == false)
           {
-            fClips.Add(Item);
-            listBoxClips.Items.Add(fClips.Count.ToString());
+            bool foundedDuplicate = false;
+            foreach (ClipItem clip in fClips)
+            {
+              if (clip.Content == Item.Content)
+              {
+                //Add stats
+                Item.Count = ++clip.Count;
+                //Duplicate
+                if (Properties.Settings.Default.AvoidDuplicate)
+                {
+                  foundedDuplicate = true;
+                  fClips.Remove(clip);
+                  fClips.Add(clip);
+                  break;
+                }
+              }
+            }
+            //EO Duplicate
+            if (!foundedDuplicate)
+            {
+              fClips.Add(Item);
+              listBoxClips.Items.Add(fClips.Count.ToString());
+            }
             trayIcon.ShowBalloonTip(500, Properties.Resources.ClipOfTypeText, Item.Content, ToolTipIcon.Info);
           }
           else
           {
             fLocalCopy = false;
           }
+          listBoxClips.Refresh();
         }
 
         //Handle Bitmap element
@@ -1133,6 +1155,62 @@ namespace Clipboards
           e.Action = DragAction.Cancel;
         }
       }
+    }
+
+
+    private void listBoxMFU_DoubleClick(object sender, EventArgs e)
+    {
+
+    }
+
+    private void listBoxMFU_DragDrop(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void listBoxMFU_DragEnter(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void listBoxMFU_DragLeave(object sender, EventArgs e)
+    {
+
+    }
+
+    private void listBoxMFU_DragOver(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void listBoxMFU_DrawItem(object sender, DrawItemEventArgs e)
+    {
+
+    }
+
+    private void listBoxMFU_KeyPress(object sender, KeyPressEventArgs e)
+    {
+
+    }
+
+    private void listBoxMFU_MeasureItem(object sender, MeasureItemEventArgs e)
+    {
+
+    }
+
+    private void listBoxMFU_MouseClick(object sender, MouseEventArgs e)
+    {
+
+    }
+
+    private void listBoxMFU_Down(object sender, MouseEventArgs e)
+    {
+
+    }
+
+    private void listBoxMFU_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
+    {
+
     }
     #endregion
   }

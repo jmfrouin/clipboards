@@ -51,6 +51,8 @@
       this.splitContainerPreviewPan = new System.Windows.Forms.SplitContainer();
       this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
       this.richTextBoxPreview = new System.Windows.Forms.RichTextBox();
+      this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+      this.listBoxMFU = new System.Windows.Forms.ListBox();
       this.listBoxFavorites = new System.Windows.Forms.ListBox();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,6 +83,10 @@
       this.splitContainerPreviewPan.Panel2.SuspendLayout();
       this.splitContainerPreviewPan.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+      this.splitContainer3.Panel1.SuspendLayout();
+      this.splitContainer3.Panel2.SuspendLayout();
+      this.splitContainer3.SuspendLayout();
       this.menuStrip1.SuspendLayout();
       this.contextMenuTray.SuspendLayout();
       this.SuspendLayout();
@@ -89,9 +95,9 @@
       // 
       this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-      this.statusBar.Location = new System.Drawing.Point(0, 321);
+      this.statusBar.Location = new System.Drawing.Point(0, 313);
       this.statusBar.Name = "statusBar";
-      this.statusBar.Size = new System.Drawing.Size(536, 22);
+      this.statusBar.Size = new System.Drawing.Size(750, 22);
       this.statusBar.TabIndex = 0;
       this.statusBar.Text = "statusStrip1";
       // 
@@ -117,7 +123,7 @@
             this.toolStripSeparator5});
       this.mainMenu.Location = new System.Drawing.Point(0, 24);
       this.mainMenu.Name = "mainMenu";
-      this.mainMenu.Size = new System.Drawing.Size(536, 25);
+      this.mainMenu.Size = new System.Drawing.Size(750, 25);
       this.mainMenu.TabIndex = 1;
       this.mainMenu.Text = "toolStrip1";
       this.mainMenu.DoubleClick += new System.EventHandler(this.trayIcon_DoubleClick);
@@ -213,7 +219,7 @@
       this.listBoxClips.FormattingEnabled = true;
       this.listBoxClips.Location = new System.Drawing.Point(0, 0);
       this.listBoxClips.Name = "listBoxClips";
-      this.listBoxClips.Size = new System.Drawing.Size(178, 272);
+      this.listBoxClips.Size = new System.Drawing.Size(251, 264);
       this.listBoxClips.TabIndex = 0;
       this.listBoxClips.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBoxClips_MouseClick);
       this.listBoxClips.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBoxClips_DrawItem);
@@ -236,7 +242,7 @@
       this.MainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
       this.MainPanel.Location = new System.Drawing.Point(0, 0);
       this.MainPanel.Name = "MainPanel";
-      this.MainPanel.Size = new System.Drawing.Size(536, 321);
+      this.MainPanel.Size = new System.Drawing.Size(750, 313);
       this.MainPanel.TabIndex = 0;
       // 
       // splitContainer1
@@ -252,8 +258,8 @@
       // splitContainer1.Panel2
       // 
       this.splitContainer1.Panel2.Controls.Add(this.listBoxClips);
-      this.splitContainer1.Size = new System.Drawing.Size(536, 272);
-      this.splitContainer1.SplitterDistance = 354;
+      this.splitContainer1.Size = new System.Drawing.Size(750, 264);
+      this.splitContainer1.SplitterDistance = 495;
       this.splitContainer1.TabIndex = 3;
       this.splitContainer1.TabStop = false;
       // 
@@ -269,9 +275,9 @@
       // 
       // splitContainer2.Panel2
       // 
-      this.splitContainer2.Panel2.Controls.Add(this.listBoxFavorites);
-      this.splitContainer2.Size = new System.Drawing.Size(354, 272);
-      this.splitContainer2.SplitterDistance = 162;
+      this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
+      this.splitContainer2.Size = new System.Drawing.Size(495, 264);
+      this.splitContainer2.SplitterDistance = 224;
       this.splitContainer2.TabIndex = 0;
       this.splitContainer2.TabStop = false;
       // 
@@ -288,8 +294,8 @@
       // splitContainerPreviewPan.Panel2
       // 
       this.splitContainerPreviewPan.Panel2.Controls.Add(this.richTextBoxPreview);
-      this.splitContainerPreviewPan.Size = new System.Drawing.Size(162, 272);
-      this.splitContainerPreviewPan.SplitterDistance = 95;
+      this.splitContainerPreviewPan.Size = new System.Drawing.Size(224, 264);
+      this.splitContainerPreviewPan.SplitterDistance = 130;
       this.splitContainerPreviewPan.TabIndex = 0;
       this.splitContainerPreviewPan.TabStop = false;
       // 
@@ -298,7 +304,7 @@
       this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
       this.pictureBoxPreview.Location = new System.Drawing.Point(0, 0);
       this.pictureBoxPreview.Name = "pictureBoxPreview";
-      this.pictureBoxPreview.Size = new System.Drawing.Size(95, 272);
+      this.pictureBoxPreview.Size = new System.Drawing.Size(130, 264);
       this.pictureBoxPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
       this.pictureBoxPreview.TabIndex = 0;
       this.pictureBoxPreview.TabStop = false;
@@ -308,9 +314,49 @@
       this.richTextBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
       this.richTextBoxPreview.Location = new System.Drawing.Point(0, 0);
       this.richTextBoxPreview.Name = "richTextBoxPreview";
-      this.richTextBoxPreview.Size = new System.Drawing.Size(63, 272);
+      this.richTextBoxPreview.Size = new System.Drawing.Size(90, 264);
       this.richTextBoxPreview.TabIndex = 0;
       this.richTextBoxPreview.Text = "";
+      // 
+      // splitContainer3
+      // 
+      this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+      this.splitContainer3.Name = "splitContainer3";
+      // 
+      // splitContainer3.Panel1
+      // 
+      this.splitContainer3.Panel1.Controls.Add(this.listBoxMFU);
+      // 
+      // splitContainer3.Panel2
+      // 
+      this.splitContainer3.Panel2.Controls.Add(this.listBoxFavorites);
+      this.splitContainer3.Size = new System.Drawing.Size(267, 264);
+      this.splitContainer3.SplitterDistance = 88;
+      this.splitContainer3.TabIndex = 1;
+      // 
+      // listBoxMFU
+      // 
+      this.listBoxMFU.AllowDrop = true;
+      this.listBoxMFU.BackColor = System.Drawing.Color.White;
+      this.listBoxMFU.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.listBoxMFU.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+      this.listBoxMFU.FormattingEnabled = true;
+      this.listBoxMFU.Location = new System.Drawing.Point(0, 0);
+      this.listBoxMFU.Name = "listBoxMFU";
+      this.listBoxMFU.Size = new System.Drawing.Size(88, 264);
+      this.listBoxMFU.TabIndex = 0;
+      this.listBoxMFU.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBoxMFU_MouseClick);
+      this.listBoxMFU.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBoxMFU_DrawItem);
+      this.listBoxMFU.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.listBoxMFU_MeasureItem);
+      this.listBoxMFU.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBoxMFU_DragDrop);
+      this.listBoxMFU.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBoxMFU_DragEnter);
+      this.listBoxMFU.DragOver += new System.Windows.Forms.DragEventHandler(this.listBoxMFU_DragOver);
+      this.listBoxMFU.DragLeave += new System.EventHandler(this.listBoxMFU_DragLeave);
+      this.listBoxMFU.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.listBoxMFU_QueryContinueDrag);
+      this.listBoxMFU.DoubleClick += new System.EventHandler(this.listBoxMFU_DoubleClick);
+      this.listBoxMFU.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listBoxMFU_KeyPress);
+      this.listBoxMFU.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBoxMFU_Down);
       // 
       // listBoxFavorites
       // 
@@ -321,7 +367,7 @@
       this.listBoxFavorites.FormattingEnabled = true;
       this.listBoxFavorites.Location = new System.Drawing.Point(0, 0);
       this.listBoxFavorites.Name = "listBoxFavorites";
-      this.listBoxFavorites.Size = new System.Drawing.Size(188, 272);
+      this.listBoxFavorites.Size = new System.Drawing.Size(175, 264);
       this.listBoxFavorites.TabIndex = 0;
       this.listBoxFavorites.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBoxFavorites_MouseClick);
       this.listBoxFavorites.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBoxFavorites_FavDrawItem);
@@ -330,6 +376,7 @@
       this.listBoxFavorites.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBoxFavorites_DragEnter);
       this.listBoxFavorites.DragOver += new System.Windows.Forms.DragEventHandler(this.listBoxFavorites_DragOver);
       this.listBoxFavorites.DragLeave += new System.EventHandler(this.listBoxFavorites_DragLeave);
+      this.listBoxFavorites.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.listBoxFavorites_QueryContinueDrag);
       this.listBoxFavorites.DoubleClick += new System.EventHandler(this.listBoxFavorites_DoubleClick);
       this.listBoxFavorites.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listBoxFavorites_KeyPress);
       this.listBoxFavorites.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBoxFavorites_MouseDown);
@@ -340,7 +387,7 @@
             this.fileToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(536, 24);
+      this.menuStrip1.Size = new System.Drawing.Size(750, 24);
       this.menuStrip1.TabIndex = 2;
       this.menuStrip1.Text = "menuStrip1";
       // 
@@ -439,7 +486,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(536, 343);
+      this.ClientSize = new System.Drawing.Size(750, 335);
       this.Controls.Add(this.MainPanel);
       this.Controls.Add(this.statusBar);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -475,6 +522,10 @@
       ((System.ComponentModel.ISupportInitialize)(this.splitContainerPreviewPan)).EndInit();
       this.splitContainerPreviewPan.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
+      this.splitContainer3.Panel1.ResumeLayout(false);
+      this.splitContainer3.Panel2.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+      this.splitContainer3.ResumeLayout(false);
       this.menuStrip1.ResumeLayout(false);
       this.menuStrip1.PerformLayout();
       this.contextMenuTray.ResumeLayout(false);
@@ -520,6 +571,8 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
+        private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.ListBox listBoxMFU;
     }
 }
 
