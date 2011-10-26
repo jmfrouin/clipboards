@@ -97,6 +97,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\ClipsListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\ClipsListBox.Designer.cs">
+      <DependentUpon>ClipsListBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\FavoritesListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\FavoritesListBox.Designer.cs">
+      <DependentUpon>FavoritesListBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\MFUListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\MFUListBox.Designer.cs">
+      <DependentUpon>MFUListBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
