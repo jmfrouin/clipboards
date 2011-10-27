@@ -97,6 +97,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Singleton.cs" />
     <Compile Include="Components\ClipsListBox.cs">
       <SubType>Component</SubType>
     </Compile>
