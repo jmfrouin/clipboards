@@ -38,12 +38,23 @@ namespace Clipboards
     public bool fFromClips;
     public bool fFromFavorites;
     public bool fFromMFU;
+
+    //Allow shutdown
+    Boolean fShutdownApp = false;
+
+    //Hide @startup
+    //private bool fHideStartup = true;
     #endregion
 
-    #region Ctor / Dtor
+    #region Constructor
     public MainForm()
     {
       InitializeComponent();
+
+      listBoxClips.SetMainForm(this);
+      listBoxFavorites.SetMainForm(this);
+      listBoxMFU.SetMainForm(this);
+
       fLocalCopy = false;
       fCallFromHotkey = false;
       fInitialRun = true;
@@ -112,6 +123,7 @@ namespace Clipboards
     }
     #endregion
 
+    #region Methods
     public void DisplayClip(ClipItem clip)
     {
       switch (clip.Type)
@@ -139,109 +151,41 @@ namespace Clipboards
       }
     }
 
-    #region Callbacks !
-    private void MainForm_Activated(object sender, System.EventArgs e)
+    private void applySettingsToUI()
     {
-      //this.Opacity = 1;
-      //this.Show();
-    }
-
-    private void MainForm_Deactivate(object sender, System.EventArgs e)
-    {
-      //this.Opacity = 0.3;
-      //this.Hide();
-    }
-
-    private void MainForm_Load(object sender, System.EventArgs e)
-    {
-      RestoreClips();
-      //Register CTRL+SHIFT+D & CTRL+E
-      //http://msdn.microsoft.com/en-us/library/windows/desktop/ms646279(v=vs.85).aspx
-      //APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), APIFuncs.Constants.CTRL + APIFuncs.Constants.SHIFT, (int)'V');
-      APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), APIFuncs.Constants.CTRL, (int)'E');
-    }
-
-    private void MainForm_Closed(object sender, System.EventArgs e)
-    {
-      APIFuncs.UnregisterHotKey(this.Handle, this.GetType().GetHashCode());
-      UnregisterClipboardViewer();
-      SaveClips();
-    }
-
-    protected override void WndProc(ref Message m)
-    {
-      switch ((APIFuncs.Msgs)m.Msg)
+      //If Preview & Favorites are closed, collapse pan.
+      if (!Properties.Settings.Default.DisplayFavorites && !Properties.Settings.Default.DisplayPreview)
       {
-        case APIFuncs.Msgs.WM_SETFOCUS:
-          {
-            fExtApp = APIFuncs.GetActiveWindow();
-            break;
-          }
-        case APIFuncs.Msgs.WM_HOTKEY:
-          {
-            Keys key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);
-            int Modifiers = ((int)m.LParam & 0xFFFF);
-            switch (key)
-            {
-              case Keys.E:
-                {
-                  if (Modifiers == APIFuncs.Constants.CTRL)
-                  {
-                    listBoxClips.SelectedIndex = listBoxClips.Items.Count - 1;
-                    Show();
-                    WindowState = FormWindowState.Normal;
-                    fCallFromHotkey = true;
-                  }
-                  break;
-                }
-              case Keys.V:
-                {
-                  if ((Modifiers == (APIFuncs.Constants.CTRL + APIFuncs.Constants.SHIFT)))
-                  {
-                    QuickPaste qp = new QuickPaste();
-                    qp.Show();
-                    fCallFromHotkey = true;
-                  }
-                  break;
-                }
-              default:
-                break;
+        splitContainer1.Panel1Collapsed = true;
+        splitContainer1.Panel1.Hide();
+      }
+      else
+      {
+        splitContainer1.Panel1Collapsed = false;
+        splitContainer1.Panel1.Show();
 
-            }
-            break;
-          }
-        case APIFuncs.Msgs.WM_DRAWCLIPBOARD:
-          {
-            if (!fInitialRun)
-            {
-              InsertClip();
-              if (ClipboardViewerNext != System.IntPtr.Zero)
-                APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
-            }
-            else
-            {
-              fInitialRun = false;
-            }
-            break;
-          }
-        case APIFuncs.Msgs.WM_CHANGECBCHAIN:
-          {
-            if (m.WParam == ClipboardViewerNext)
-            {
-              ClipboardViewerNext = m.LParam;
-            }
-            else
-            {
-              if (ClipboardViewerNext != System.IntPtr.Zero)
-                APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
-            }
-            break;
-          }
-        default:
-          {
-            base.WndProc(ref m);
-            break;
-          }
+        //Use Settings
+        if (Properties.Settings.Default.DisplayPreview)
+        {
+          splitContainer2.Panel1Collapsed = false;
+          splitContainer2.Panel1.Show();
+        }
+        else
+        {
+          splitContainer2.Panel1Collapsed = true;
+          splitContainer2.Panel1.Hide();
+        }
+
+        if (Properties.Settings.Default.DisplayFavorites)
+        {
+          splitContainer2.Panel2Collapsed = false;
+          splitContainer2.Panel2.Show();
+        }
+        else
+        {
+          splitContainer2.Panel2Collapsed = true;
+          splitContainer2.Panel2.Hide();
+        }
       }
     }
 
@@ -286,7 +230,7 @@ namespace Clipboards
                   listBoxMFU.fMFU.Add(Item);
                   listBoxMFU.Items.Add(listBoxMFU.fMFU.Count.ToString());
                 }
-                
+
                 //Duplicate
                 if (Properties.Settings.Default.AvoidDuplicate)
                 {
@@ -346,9 +290,6 @@ namespace Clipboards
                 */
       }
     }
-    #endregion
-
-    #region Customized listboxes !
 
     public void Paste(ClipItem clip)
     {
@@ -434,6 +375,148 @@ namespace Clipboards
     }
     #endregion
 
+    #region Callbacks !
+    private void MainForm_Activated(object sender, System.EventArgs e)
+    {
+      //this.Opacity = 1;
+      //this.Show();
+    }
+
+    private void MainForm_Deactivate(object sender, System.EventArgs e)
+    {
+      //this.Opacity = 0.3;
+      //this.Hide();
+    }
+
+    private void MainForm_Load(object sender, System.EventArgs e)
+    {
+      RestoreClips();
+      //Register CTRL+SHIFT+D & CTRL+E
+      //http://msdn.microsoft.com/en-us/library/windows/desktop/ms646279(v=vs.85).aspx
+      //APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), APIFuncs.Constants.CTRL + APIFuncs.Constants.SHIFT, (int)'V');
+      APIFuncs.RegisterHotKey(this.Handle, this.GetType().GetHashCode(), APIFuncs.Constants.CTRL, (int)'E');
+    }
+
+    private void MainForm_Closed(object sender, System.EventArgs e)
+    {
+      APIFuncs.UnregisterHotKey(this.Handle, this.GetType().GetHashCode());
+      UnregisterClipboardViewer();
+      SaveClips();
+    }
+
+    private void OnResize(object sender, EventArgs e)
+    {
+      if (WindowState == FormWindowState.Minimized)
+      {
+        Hide();
+      }
+    }
+
+    private void OnFormClosing(object sender, FormClosingEventArgs e)
+    {
+      if (!fShutdownApp)
+      {
+        Hide();
+        WindowState = FormWindowState.Minimized;
+        e.Cancel = true;
+      }
+    }
+
+    /*protected override void SetVisibleCore(bool value)
+    {
+      if (!fHideStartup)
+      {
+        base.SetVisibleCore(value);
+      }
+      else
+      {
+        fHideStartup = false;
+      }
+    }*/
+
+    protected override void WndProc(ref Message m)
+    {
+      switch ((APIFuncs.Msgs)m.Msg)
+      {
+        case APIFuncs.Msgs.WM_SETFOCUS:
+          {
+            fExtApp = APIFuncs.GetActiveWindow();
+            break;
+          }
+        case APIFuncs.Msgs.WM_HOTKEY:
+          {
+            Keys key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);
+            int Modifiers = ((int)m.LParam & 0xFFFF);
+            switch (key)
+            {
+              case Keys.E:
+                {
+                  if (Modifiers == APIFuncs.Constants.CTRL)
+                  {
+                    listBoxClips.SelectedIndex = listBoxClips.Items.Count - 1;
+                    Show();
+                    WindowState = FormWindowState.Normal;
+                    fCallFromHotkey = true;
+                  }
+                  break;
+                }
+              case Keys.V:
+                {
+                  if ((Modifiers == (APIFuncs.Constants.CTRL + APIFuncs.Constants.SHIFT)))
+                  {
+                    QuickPaste qp = new QuickPaste();
+                    qp.Show();
+                    fCallFromHotkey = true;
+                  }
+                  break;
+                }
+              default:
+                break;
+
+            }
+            break;
+          }
+        case APIFuncs.Msgs.WM_QUERYENDSESSION:
+          {
+            fShutdownApp = true;
+            break;
+          }
+        case APIFuncs.Msgs.WM_DRAWCLIPBOARD:
+          {
+            if (!fInitialRun)
+            {
+              InsertClip();
+              if (ClipboardViewerNext != System.IntPtr.Zero)
+                APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+            }
+            else
+            {
+              fInitialRun = false;
+            }
+            break;
+          }
+        case APIFuncs.Msgs.WM_CHANGECBCHAIN:
+          {
+            if (m.WParam == ClipboardViewerNext)
+            {
+              ClipboardViewerNext = m.LParam;
+            }
+            else
+            {
+              if (ClipboardViewerNext != System.IntPtr.Zero)
+                APIFuncs.SendMessage(ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+            }
+            break;
+          }
+        default:
+          {
+            base.WndProc(ref m);
+            break;
+          }
+      }
+    }
+    #endregion
+
     #region (Un)Register to clipboard viewers chain !
     private void RegisterClipboardViewer()
     {
@@ -446,7 +529,7 @@ namespace Clipboards
     }
     #endregion
 
-    #region Save / Restore Clips
+    #region (De)Serialize clips.
     private void SaveClips()
     {
       try
@@ -524,12 +607,6 @@ namespace Clipboards
     #endregion
 
     #region toolStrip callbacks
-    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      AboutBox aBox = new AboutBox();
-      aBox.ShowDialog();
-    }
-
     private void toolStripDelete_Click(object sender, EventArgs e)
     {
       if (listBoxClips.Focused)
@@ -550,37 +627,47 @@ namespace Clipboards
           listBoxFavorites.Items.RemoveAt(Index);
         }
       }
-    }
-
-    private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      Close();
+      if (listBoxMFU.Focused)
+      {
+        int Index = listBoxMFU.SelectedIndex;
+        if (Index != -1)
+        {
+          listBoxMFU.fMFU.RemoveAt(Index);
+          listBoxMFU.Items.RemoveAt(Index);
+        }
+      }
     }
 
     private void toolStripUp_Click(object sender, EventArgs e)
     {
-      int Index = listBoxClips.SelectedIndex;
-      if (Index > 0)
+      if (listBoxClips.Focused)
       {
-        ClipItem Clip = listBoxClips.fClips[Index];
-        listBoxClips.fClips.RemoveAt(Index);
-        listBoxClips.fClips.Insert(Index - 1, Clip);
-        listBoxClips.SelectedIndex = Index - 1;
+        listBoxClips.MoveUp();
       }
-      listBoxClips.Refresh();
+      if (listBoxFavorites.Focused)
+      {
+        listBoxFavorites.MoveUp();
+      }
+      if (listBoxMFU.Focused)
+      {
+        listBoxMFU.MoveUp();
+      }
     }
 
     private void toolStripDown_Click(object sender, EventArgs e)
     {
-      int Index = listBoxClips.SelectedIndex;
-      if (Index != -1 && Index < (listBoxClips.Items.Count - 1))
+      if (listBoxClips.Focused)
       {
-        ClipItem Clip = listBoxClips.fClips[Index];
-        listBoxClips.fClips.RemoveAt(Index);
-        listBoxClips.fClips.Insert(Index + 1, Clip);
-        listBoxClips.SelectedIndex = Index + 1;
+        listBoxClips.MoveDown();
       }
-      listBoxClips.Refresh();
+      if (listBoxFavorites.Focused)
+      {
+        listBoxFavorites.MoveDown();
+      }
+      if (listBoxMFU.Focused)
+      {
+        listBoxMFU.MoveDown();
+      }
     }
 
     private void toolStripButtonExpandPreviewPan_Click(object sender, EventArgs e)
@@ -592,14 +679,17 @@ namespace Clipboards
 
     private void toolStripButtonAddFav_Click(object sender, EventArgs e)
     {
-      int Index = listBoxClips.SelectedIndex;
-      if (Index != -1)
+      if (listBoxClips.Focused)
       {
-        ClipItem Clip = listBoxClips.fClips[Index];
-        listBoxFavorites.fFavorites.Add(Clip);
-        listBoxFavorites.Items.Add(listBoxFavorites.fFavorites.Count.ToString());
+        int Index = listBoxClips.SelectedIndex;
+        if (Index != -1)
+        {
+          ClipItem Clip = listBoxClips.fClips[Index];
+          listBoxFavorites.fFavorites.Add(Clip);
+          listBoxFavorites.Items.Add(listBoxFavorites.fFavorites.Count.ToString());
+        }
+        listBoxFavorites.Refresh();
       }
-      listBoxFavorites.Refresh();
     }
 
     private void toolStripFavorites_Click(object sender, EventArgs e)
@@ -615,58 +705,31 @@ namespace Clipboards
       sBox.ShowDialog();
       applySettingsToUI();
     }
+
+    private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      fShutdownApp = true;
+      Close();
+    }
+
+    private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      Show();
+    }
+
+    private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      fShutdownApp = true;
+      Close();
+    }
+
+    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      AboutBox aBox = new AboutBox();
+      aBox.ShowDialog();
+    }
     #endregion
-
-    private void applySettingsToUI()
-    {
-      //If Preview & Favorites are closed, collapse pan.
-      if (!Properties.Settings.Default.DisplayFavorites && !Properties.Settings.Default.DisplayPreview)
-      {
-        splitContainer1.Panel1Collapsed = true;
-        splitContainer1.Panel1.Hide();
-      }
-      else
-      {
-        splitContainer1.Panel1Collapsed = false;
-        splitContainer1.Panel1.Show();
-
-        //Use Settings
-        if (Properties.Settings.Default.DisplayPreview)
-        {
-          splitContainer2.Panel1Collapsed = false;
-          splitContainer2.Panel1.Show();
-        }
-        else
-        {
-          splitContainer2.Panel1Collapsed = true;
-          splitContainer2.Panel1.Hide();
-        }
-
-        if (Properties.Settings.Default.DisplayFavorites)
-        {
-          splitContainer2.Panel2Collapsed = false;
-          splitContainer2.Panel2.Show();
-        }
-        else
-        {
-          splitContainer2.Panel2Collapsed = true;
-          splitContainer2.Panel2.Hide();
-        }
-      }
-    }
-
-    private void OnResize(object sender, EventArgs e)
-    {
-      if (WindowState == FormWindowState.Minimized)
-      {
-        Hide();
-      }
-    }
-
-    private void OnFormClosing(object sender, FormClosingEventArgs e)
-    {
-    }
-
+    
     #region Tray icons callbacks
     private void trayIcon_DoubleClick(object sender, EventArgs e)
     {
@@ -681,19 +744,7 @@ namespace Clipboards
         WindowState = FormWindowState.Minimized;
       }
     }
-
-    private void quitToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      Close();
-    }
-
-    private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      Show();
-      WindowState = FormWindowState.Normal;
-    }
-    #endregion
-
+    
     private void trayIcon_MouseClick(object sender, MouseEventArgs e)
     {
       /*const int nChars = 256;
@@ -708,8 +759,9 @@ namespace Clipboards
         int a = 2;
       }*/
     }
+    #endregion
 
-    #region Drap & Drop stuff
+    #region Drap & Drop callbacks
     //http://www.dotnetcurry.com/ShowArticle.aspx?ID=179&AspxAutoDetectCookieSupport=1
     private void OnDragEnter(object sender, DragEventArgs e)
     {

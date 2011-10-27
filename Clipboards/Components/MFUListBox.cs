@@ -19,12 +19,74 @@ namespace Clipboards.Components
     MainForm fMainForm;
     #endregion
 
-    public MFUListBox(MainForm form)
+    #region Constructor
+    public MFUListBox()
     {
-      fMainForm = form;
       fMousePressed = false;
       fDragnDrop = false;
       InitializeComponent();
+    }
+    #endregion
+
+    #region Methods
+    public void SetMainForm(MainForm form)
+    {
+      fMainForm = form;
+    }
+
+    private void PasteMFU()
+    {
+      int Index = SelectedIndex;
+      ClipItem Clip = fMFU[Index];
+      fMainForm.Paste(Clip);
+    }
+
+    public void MoveUp()
+    {
+      int Index = SelectedIndex;
+      if (Index > 0)
+      {
+        ClipItem Clip = fMFU[Index];
+        fMFU.RemoveAt(Index);
+        fMFU.Insert(Index - 1, Clip);
+        SelectedIndex = Index - 1;
+      }
+      Refresh();
+    }
+
+    public void MoveDown()
+    {
+      int Index = SelectedIndex;
+      if (Index != -1 && Index < (Items.Count - 1))
+      {
+        ClipItem Clip = fMFU[Index];
+        fMFU.RemoveAt(Index);
+        fMFU.Insert(Index + 1, Clip);
+        SelectedIndex = Index + 1;
+      }
+      Refresh();
+    }
+    #endregion
+
+    #region Global callbacks
+    private void MFUDrawItem(object sender, DrawItemEventArgs e)
+    {
+      if (e.Index != -1 && e.Index < fMFU.Count)
+      {
+        Graphics g = e.Graphics;
+        ClipItem Clip = fMFU[e.Index];
+        Clip.Draw(g, e.Bounds, e.State, e.Font);
+        g.Dispose();
+      }
+    }
+
+    private void MFUKeyPress(object sender, KeyPressEventArgs e)
+    {
+      char c = e.KeyChar;
+      if (c == 13)
+      {
+        PasteMFU();
+      }
     }
 
     private void MFUDoubleClick(object sender, EventArgs e)
@@ -32,6 +94,20 @@ namespace Clipboards.Components
       PasteMFU();
     }
 
+    private void MFUMeasureItem(object sender, MeasureItemEventArgs e)
+    {
+      if (e.Index != -1 && e.Index < fMFU.Count)
+      {
+        ClipItem Clip = fMFU[e.Index];
+        int W = e.ItemWidth, H = e.ItemHeight;
+        Clip.Measure(e, Font, ref W, ref H);
+        e.ItemWidth = W;
+        e.ItemHeight = H;
+      }
+    }
+    #endregion
+
+    #region Drag & Drop callbacks
     private void MFUDragDrop(object sender, DragEventArgs e)
     {
       if (e.Data.GetDataPresent(DataFormats.StringFormat))
@@ -78,46 +154,30 @@ namespace Clipboards.Components
         Items.Remove((string)e.Data.GetData(DataFormats.Text));*/
     }
 
-    private void MFUDrawItem(object sender, DrawItemEventArgs e)
+    private void MFUQueryContinueDrag(object sender, QueryContinueDragEventArgs e)
     {
-      if (e.Index != -1 && e.Index < fMFU.Count)
+      Point ScreenOffset = SystemInformation.WorkingArea.Location;
+
+      ListBox lb = sender as ListBox;
+
+      if (lb != null)
       {
-        Graphics g = e.Graphics;
-        ClipItem Clip = fMFU[e.Index];
-        Clip.Draw(g, e.Bounds, e.State, e.Font);
-        g.Dispose();
+        Form f = lb.FindForm();
+        // Cancel the drag if the mouse moves off the form. The screenOffset
+        // takes into account any desktop bands that may be at the top or left
+        // side of the screen.
+        if (((Control.MousePosition.X - ScreenOffset.X) < f.DesktopBounds.Left) ||
+          ((Control.MousePosition.X - ScreenOffset.X) > f.DesktopBounds.Right) ||
+          ((Control.MousePosition.Y - ScreenOffset.Y) < f.DesktopBounds.Top) ||
+          ((Control.MousePosition.Y - ScreenOffset.Y) > f.DesktopBounds.Bottom))
+        {
+          e.Action = DragAction.Cancel;
+        }
       }
     }
+    #endregion
 
-    private void MFUKeyPress(object sender, KeyPressEventArgs e)
-    {
-      char c = e.KeyChar;
-      if (c == 13)
-      {
-        PasteMFU();
-      }
-    }
-
-    private void PasteMFU()
-    {
-      int Index = SelectedIndex;
-      ClipItem Clip = fMFU[Index];
-      fMainForm.Paste(Clip);
-    }
-
-    private void MFUMeasureItem(object sender, MeasureItemEventArgs e)
-    {
-      if (e.Index != -1 && e.Index < fMFU.Count)
-      {
-        ClipItem Clip = fMFU[e.Index];
-        int W = e.ItemWidth, H = e.ItemHeight;
-        Clip.Measure(e, Font, ref W, ref H);
-        e.ItemWidth = W;
-        e.ItemHeight = H;
-      }
-    }
-
-
+    #region Mouse callbacks
     private void MFUMouseDown(object sender, MouseEventArgs e)
     {
       fMousePressed = true;
@@ -186,27 +246,6 @@ namespace Clipboards.Components
       fMousePressed = false;
       fMainForm.fIndexToDragFromMFU = -1;
     }
-
-    private void MFUQueryContinueDrag(object sender, QueryContinueDragEventArgs e)
-    {
-      Point ScreenOffset = SystemInformation.WorkingArea.Location;
-
-      ListBox lb = sender as ListBox;
-
-      if (lb != null)
-      {
-        Form f = lb.FindForm();
-        // Cancel the drag if the mouse moves off the form. The screenOffset
-        // takes into account any desktop bands that may be at the top or left
-        // side of the screen.
-        if (((Control.MousePosition.X - ScreenOffset.X) < f.DesktopBounds.Left) ||
-          ((Control.MousePosition.X - ScreenOffset.X) > f.DesktopBounds.Right) ||
-          ((Control.MousePosition.Y - ScreenOffset.Y) < f.DesktopBounds.Top) ||
-          ((Control.MousePosition.Y - ScreenOffset.Y) > f.DesktopBounds.Bottom))
-        {
-          e.Action = DragAction.Cancel;
-        }
-      }
-    }
+    #endregion
   }
 }

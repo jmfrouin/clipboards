@@ -15,15 +15,57 @@ namespace Clipboards.Components
     MainForm fMainForm;
     #endregion
 
-    public ClipsListBox(MainForm form)
+    #region Constructor
+    public ClipsListBox()
     {
-      fMainForm = form;
       fMousePressed = false;
       fDragnDrop = false;
 
       InitializeComponent();
     }
+    #endregion
 
+    #region Methods
+    public void SetMainForm(MainForm form)
+    {
+      fMainForm = form;
+    }
+
+    private void PasteClips()
+    {
+      int Index = SelectedIndex;
+      ClipItem Clip = fClips[Index];
+      fMainForm.Paste(Clip);
+    }
+
+    public void MoveUp()
+    {
+      int Index = SelectedIndex;
+      if (Index > 0)
+      {
+        ClipItem Clip = fClips[Index];
+        fClips.RemoveAt(Index);
+        fClips.Insert(Index - 1, Clip);
+        SelectedIndex = Index - 1;
+      }
+      Refresh();
+    }
+
+    public void MoveDown()
+    {
+      int Index = SelectedIndex;
+      if (Index != -1 && Index < (Items.Count - 1))
+      {
+        ClipItem Clip = fClips[Index];
+        fClips.RemoveAt(Index);
+        fClips.Insert(Index + 1, Clip);
+        SelectedIndex = Index + 1;
+      }
+      Refresh();
+    }
+    #endregion
+
+    #region Globals callbacks
     private void ClipsMeasureItem(object sender, MeasureItemEventArgs e)
     {
       if (e.Index != -1 && e.Index < fClips.Count)
@@ -56,13 +98,6 @@ namespace Clipboards.Components
       }
     }
 
-    private void PasteClips()
-    {
-      int Index = SelectedIndex;
-      ClipItem Clip = fClips[Index];
-      fMainForm.Paste(Clip);
-    }
-
     private void ClipsDoubleClick(object sender, EventArgs e)
     {
       /*IntPtr Temp = (IntPtr)462908;
@@ -72,7 +107,9 @@ namespace Clipboards.Components
       SendKeys.Send("^v");
       //PasteClips();
     }
+    #endregion
 
+    #region Drag & Drop callbacks
     private void ClipsDragEnter(object sender, DragEventArgs e)
     {
       if (e.Data.GetDataPresent(DataFormats.StringFormat)) e.Effect = DragDropEffects.Copy;
@@ -119,8 +156,75 @@ namespace Clipboards.Components
       dropHelper.DragOver(ref wp, (int)e.Effect);
 #endif
     }
+    
+    private void ClipsQueryContinueDrag(object sender, QueryContinueDragEventArgs e)
+    {
+      Point ScreenOffset = SystemInformation.WorkingArea.Location;
 
-    #region Mouse related callbacks
+      ListBox lb = sender as ListBox;
+
+      if (lb != null)
+      {
+        Form f = lb.FindForm();
+        // Cancel the drag if the mouse moves off the form. The screenOffset
+        // takes into account any desktop bands that may be at the top or left
+        // side of the screen.
+        if (((Control.MousePosition.X - ScreenOffset.X) < f.DesktopBounds.Left) ||
+          ((Control.MousePosition.X - ScreenOffset.X) > f.DesktopBounds.Right) ||
+          ((Control.MousePosition.Y - ScreenOffset.Y) < f.DesktopBounds.Top) ||
+          ((Control.MousePosition.Y - ScreenOffset.Y) > f.DesktopBounds.Bottom))
+        {
+          e.Action = DragAction.Cancel;
+        }
+      }
+    }
+
+    private void ClipsDragDrop(object sender, DragEventArgs e)
+    {
+      if (e.Data.GetDataPresent(DataFormats.StringFormat))
+      {
+        ClipItem Clip = new ClipItem((string)(e.Data.GetData(DataFormats.Text)), true);
+        // add the selected string to bottom of list
+        fClips.Add(Clip);
+        Items.Add(e.Data.GetData(DataFormats.Text));
+
+        /*if (fFromFavorites)
+        {
+          if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxFavorites.Items.Count)
+          {
+            int Index = 0;
+            try
+            {
+              Index = int.Parse((string)e.Data.GetData(DataFormats.Text));
+            }
+            catch (Exception)
+            {
+              Console.WriteLine("Erreur de parsing");
+            }
+
+            ClipItem Clip = fFavorites[Index];
+            fClips.Add(Clip);
+            listBoxClips.Items.Add(fClips.Count.ToString());
+          }
+          fFromFavorites = false;
+        }*/
+
+        //Refresh
+        Refresh();
+      }
+
+#if ADVANCED_DRAG_AND_DROP
+      Point p = Cursor.Position;
+      Win32Point wp;
+      wp.x = p.X;
+      wp.y = p.Y;
+      IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
+      dropHelper.Drop((ComIDataObject)e.Data, ref wp, (int)e.Effect);
+#endif
+    }
+    #endregion
+
+    #region Mouse callbacks
     private void ClipsMouseClick(object sender, MouseEventArgs e)
     {
       int Index = SelectedIndex;
@@ -191,71 +295,5 @@ namespace Clipboards.Components
       }
     }
     #endregion
-
-    private void ClipsQueryContinueDrag(object sender, QueryContinueDragEventArgs e)
-    {
-      Point ScreenOffset = SystemInformation.WorkingArea.Location;
-
-      ListBox lb = sender as ListBox;
-
-      if (lb != null)
-      {
-        Form f = lb.FindForm();
-        // Cancel the drag if the mouse moves off the form. The screenOffset
-        // takes into account any desktop bands that may be at the top or left
-        // side of the screen.
-        if (((Control.MousePosition.X - ScreenOffset.X) < f.DesktopBounds.Left) ||
-          ((Control.MousePosition.X - ScreenOffset.X) > f.DesktopBounds.Right) ||
-          ((Control.MousePosition.Y - ScreenOffset.Y) < f.DesktopBounds.Top) ||
-          ((Control.MousePosition.Y - ScreenOffset.Y) > f.DesktopBounds.Bottom))
-        {
-          e.Action = DragAction.Cancel;
-        }
-      }
-    }
-
-    private void ClipsDragDrop(object sender, DragEventArgs e)
-    {
-      if (e.Data.GetDataPresent(DataFormats.StringFormat))
-      {
-        ClipItem Clip = new ClipItem((string)(e.Data.GetData(DataFormats.Text)), true);
-        // add the selected string to bottom of list
-        fClips.Add(Clip);
-        Items.Add(e.Data.GetData(DataFormats.Text));
-
-        /*if (fFromFavorites)
-        {
-          if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxFavorites.Items.Count)
-          {
-            int Index = 0;
-            try
-            {
-              Index = int.Parse((string)e.Data.GetData(DataFormats.Text));
-            }
-            catch (Exception)
-            {
-              Console.WriteLine("Erreur de parsing");
-            }
-
-            ClipItem Clip = fFavorites[Index];
-            fClips.Add(Clip);
-            listBoxClips.Items.Add(fClips.Count.ToString());
-          }
-          fFromFavorites = false;
-        }*/
-
-        //Refresh
-        Refresh();
-      }
-
-#if ADVANCED_DRAG_AND_DROP
-      Point p = Cursor.Position;
-      Win32Point wp;
-      wp.x = p.X;
-      wp.y = p.Y;
-      IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
-      dropHelper.Drop((ComIDataObject)e.Data, ref wp, (int)e.Effect);
-#endif
-    }
   }
 }

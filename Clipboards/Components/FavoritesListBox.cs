@@ -18,14 +18,56 @@ namespace Clipboards.Components
     MainForm fMainForm;
     #endregion
 
-    public FavoritesListBox(MainForm form)
+    #region Constructor
+    public FavoritesListBox()
     {
-      fMainForm = form;
       fMousePressed = false;
       fDragnDrop = false;
       InitializeComponent();
     }
+    #endregion
 
+    #region Methods
+    public void SetMainForm(MainForm form)
+    {
+      fMainForm = form;
+    }
+
+    private void PasteFavorites()
+    {
+      int Index = SelectedIndex;
+      ClipItem Clip = fFavorites[Index];
+      fMainForm.Paste(Clip);
+    }
+
+    public void MoveUp()
+    {
+      int Index = SelectedIndex;
+      if (Index > 0)
+      {
+        ClipItem Clip = fFavorites[Index];
+        fFavorites.RemoveAt(Index);
+        fFavorites.Insert(Index - 1, Clip);
+        SelectedIndex = Index - 1;
+      }
+      Refresh();
+    }
+
+    public void MoveDown()
+    {
+      int Index = SelectedIndex;
+      if (Index != -1 && Index < (Items.Count - 1))
+      {
+        ClipItem Clip = fFavorites[Index];
+        fFavorites.RemoveAt(Index);
+        fFavorites.Insert(Index + 1, Clip);
+        SelectedIndex = Index + 1;
+      }
+      Refresh();
+    }
+    #endregion
+
+    #region Globals callbacks
     private void FavMeasureItem(object sender, MeasureItemEventArgs e)
     {
       if (e.Index != -1 && e.Index < fFavorites.Count)
@@ -48,12 +90,6 @@ namespace Clipboards.Components
         g.Dispose();
       }
     }
-    private void PasteFavorites()
-    {
-      int Index = SelectedIndex;
-      ClipItem Clip = fFavorites[Index];
-      fMainForm.Paste(Clip);
-    }
 
     private void FavKeyPress(object sender, KeyPressEventArgs e)
     {
@@ -68,7 +104,9 @@ namespace Clipboards.Components
     {
       PasteFavorites();
     }
+    #endregion
 
+    #region Drag & Drop callbacks
     private void FavDragDrop(object sender, DragEventArgs e)
     {
       if (e.Data.GetDataPresent(DataFormats.StringFormat))
@@ -144,6 +182,30 @@ namespace Clipboards.Components
         listBoxFavorites.Items.Remove((string)e.Data.GetData(DataFormats.Text));*/
     }
 
+    private void FavQueryContinueDrag(object sender, QueryContinueDragEventArgs e)
+    {
+      Point ScreenOffset = SystemInformation.WorkingArea.Location;
+
+      ListBox lb = sender as ListBox;
+
+      if (lb != null)
+      {
+        Form f = lb.FindForm();
+        // Cancel the drag if the mouse moves off the form. The screenOffset
+        // takes into account any desktop bands that may be at the top or left
+        // side of the screen.
+        if (((Control.MousePosition.X - ScreenOffset.X) < f.DesktopBounds.Left) ||
+          ((Control.MousePosition.X - ScreenOffset.X) > f.DesktopBounds.Right) ||
+          ((Control.MousePosition.Y - ScreenOffset.Y) < f.DesktopBounds.Top) ||
+          ((Control.MousePosition.Y - ScreenOffset.Y) > f.DesktopBounds.Bottom))
+        {
+          e.Action = DragAction.Cancel;
+        }
+      }
+    }
+    #endregion
+
+    #region Mouse callbacks
     private void FavMouseDown(object sender, MouseEventArgs e)
     {
       fMousePressed = true;
@@ -212,29 +274,6 @@ namespace Clipboards.Components
       fMousePressed = false;
       fMainForm.fIndexToDragFromFavorites = -1;
     }
-
-    private void FavQueryContinueDrag(object sender, QueryContinueDragEventArgs e)
-    {
-      Point ScreenOffset = SystemInformation.WorkingArea.Location;
-
-      ListBox lb = sender as ListBox;
-
-      if (lb != null)
-      {
-        Form f = lb.FindForm();
-        // Cancel the drag if the mouse moves off the form. The screenOffset
-        // takes into account any desktop bands that may be at the top or left
-        // side of the screen.
-        if (((Control.MousePosition.X - ScreenOffset.X) < f.DesktopBounds.Left) ||
-          ((Control.MousePosition.X - ScreenOffset.X) > f.DesktopBounds.Right) ||
-          ((Control.MousePosition.Y - ScreenOffset.Y) < f.DesktopBounds.Top) ||
-          ((Control.MousePosition.Y - ScreenOffset.Y) > f.DesktopBounds.Bottom))
-        {
-          e.Action = DragAction.Cancel;
-        }
-      }
-    }
-
-
+    #endregion
   }
 }

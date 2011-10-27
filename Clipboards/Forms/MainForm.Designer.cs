@@ -1,34 +1,34 @@
 ﻿using Clipboards.Components;
 namespace Clipboards
 {
-    partial class MainForm
+  partial class MainForm
+  {
+    /// <summary>
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+      if (disposing && (components != null))
+      {
+        components.Dispose();
+      }
+      base.Dispose(disposing);
+    }
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+    #region Windows Form Designer generated code
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
       this.statusBar = new System.Windows.Forms.StatusStrip();
@@ -45,7 +45,6 @@ namespace Clipboards
       this.toolStripUp = new System.Windows.Forms.ToolStripButton();
       this.toolStripDown = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-      this.listBoxClips = new ClipsListBox(this);
       this.MainPanel = new System.Windows.Forms.Panel();
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
       this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -53,8 +52,9 @@ namespace Clipboards
       this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
       this.richTextBoxPreview = new System.Windows.Forms.RichTextBox();
       this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-      this.listBoxMFU = new MFUListBox(this);
-      this.listBoxFavorites = new FavoritesListBox(this);
+      this.listBoxMFU = new Clipboards.Components.MFUListBox();
+      this.listBoxFavorites = new Clipboards.Components.FavoritesListBox();
+      this.listBoxClips = new Clipboards.Components.ClipsListBox();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -99,6 +99,7 @@ namespace Clipboards
       this.statusBar.Location = new System.Drawing.Point(0, 313);
       this.statusBar.Name = "statusBar";
       this.statusBar.Size = new System.Drawing.Size(918, 22);
+      this.statusBar.SizingGrip = false;
       this.statusBar.TabIndex = 0;
       this.statusBar.Text = "statusStrip1";
       // 
@@ -127,7 +128,6 @@ namespace Clipboards
       this.mainMenu.Size = new System.Drawing.Size(918, 25);
       this.mainMenu.TabIndex = 1;
       this.mainMenu.Text = "toolStrip1";
-      this.mainMenu.DoubleClick += new System.EventHandler(this.trayIcon_DoubleClick);
       // 
       // toolStripButtonExpandPreviewPan
       // 
@@ -315,6 +315,42 @@ namespace Clipboards
       this.splitContainer3.SplitterDistance = 207;
       this.splitContainer3.TabIndex = 1;
       // 
+      // listBoxMFU
+      // 
+      this.listBoxMFU.AllowDrop = true;
+      this.listBoxMFU.BackColor = System.Drawing.Color.White;
+      this.listBoxMFU.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.listBoxMFU.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+      this.listBoxMFU.FormattingEnabled = true;
+      this.listBoxMFU.Location = new System.Drawing.Point(0, 0);
+      this.listBoxMFU.Name = "listBoxMFU";
+      this.listBoxMFU.Size = new System.Drawing.Size(207, 264);
+      this.listBoxMFU.TabIndex = 0;
+      // 
+      // listBoxFavorites
+      // 
+      this.listBoxFavorites.AllowDrop = true;
+      this.listBoxFavorites.BackColor = System.Drawing.Color.White;
+      this.listBoxFavorites.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.listBoxFavorites.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+      this.listBoxFavorites.FormattingEnabled = true;
+      this.listBoxFavorites.Location = new System.Drawing.Point(0, 0);
+      this.listBoxFavorites.Name = "listBoxFavorites";
+      this.listBoxFavorites.Size = new System.Drawing.Size(242, 264);
+      this.listBoxFavorites.TabIndex = 0;
+      // 
+      // listBoxClips
+      // 
+      this.listBoxClips.AllowDrop = true;
+      this.listBoxClips.BackColor = System.Drawing.Color.White;
+      this.listBoxClips.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.listBoxClips.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+      this.listBoxClips.FormattingEnabled = true;
+      this.listBoxClips.Location = new System.Drawing.Point(0, 0);
+      this.listBoxClips.Name = "listBoxClips";
+      this.listBoxClips.Size = new System.Drawing.Size(239, 264);
+      this.listBoxClips.TabIndex = 0;
+      // 
       // menuStrip1
       // 
       this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -426,6 +462,7 @@ namespace Clipboards
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.MainMenuStrip = this.menuStrip1;
       this.MaximizeBox = false;
+      this.MinimizeBox = false;
       this.Name = "MainForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
       this.Text = "Clipboards";
@@ -466,47 +503,47 @@ namespace Clipboards
       this.ResumeLayout(false);
       this.PerformLayout();
 
-        }
-
-        #endregion
-
-        private System.Windows.Forms.StatusStrip statusBar;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStrip mainMenu;
-        private System.Windows.Forms.ToolStripButton toolStripPaste;
-        private System.Windows.Forms.ToolStripButton toolStripFavorites;
-        private System.Windows.Forms.ToolStripButton toolStripDelete;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton toolStripUp;
-        private System.Windows.Forms.ToolStripButton toolStripDown;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.Panel MainPanel;
-        private System.Windows.Forms.NotifyIcon trayIcon;
-        private ClipsListBox listBoxClips;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private FavoritesListBox listBoxFavorites;
-        private System.Windows.Forms.ToolStripButton toolStripButtonExpandPreviewPan;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.SplitContainer splitContainerPreviewPan;
-        private System.Windows.Forms.PictureBox pictureBoxPreview;
-        private System.Windows.Forms.ToolStripButton toolStripButtonAddFav;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.RichTextBox richTextBoxPreview;
-        private System.Windows.Forms.ContextMenuStrip contextMenuTray;
-        private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-        private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
-        private System.Windows.Forms.SplitContainer splitContainer3;
-        private MFUListBox listBoxMFU;
     }
+
+    #endregion
+
+    private System.Windows.Forms.StatusStrip statusBar;
+    private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+    private System.Windows.Forms.ToolStrip mainMenu;
+    private System.Windows.Forms.ToolStripButton toolStripPaste;
+    private System.Windows.Forms.ToolStripButton toolStripFavorites;
+    private System.Windows.Forms.ToolStripButton toolStripDelete;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+    private System.Windows.Forms.ToolStripButton toolStripUp;
+    private System.Windows.Forms.ToolStripButton toolStripDown;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+    private System.Windows.Forms.Panel MainPanel;
+    private System.Windows.Forms.NotifyIcon trayIcon;
+    private ClipsListBox listBoxClips;
+    private System.Windows.Forms.MenuStrip menuStrip1;
+    private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+    private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+    private System.Windows.Forms.SplitContainer splitContainer1;
+    private System.Windows.Forms.SplitContainer splitContainer2;
+    private FavoritesListBox listBoxFavorites;
+    private System.Windows.Forms.ToolStripButton toolStripButtonExpandPreviewPan;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+    private System.Windows.Forms.SplitContainer splitContainerPreviewPan;
+    private System.Windows.Forms.PictureBox pictureBoxPreview;
+    private System.Windows.Forms.ToolStripButton toolStripButtonAddFav;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+    private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+    private System.Windows.Forms.RichTextBox richTextBoxPreview;
+    private System.Windows.Forms.ContextMenuStrip contextMenuTray;
+    private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+    private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
+    private System.Windows.Forms.SplitContainer splitContainer3;
+    private MFUListBox listBoxMFU;
+  }
 }
 
