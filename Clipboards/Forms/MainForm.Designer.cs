@@ -519,7 +519,7 @@ namespace Clipboards
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     private System.Windows.Forms.Panel MainPanel;
     private System.Windows.Forms.NotifyIcon trayIcon;
-    private ClipsListBox listBoxClips;
+    public ClipsListBox listBoxClips;
     private System.Windows.Forms.MenuStrip menuStrip1;
     private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
@@ -527,7 +527,7 @@ namespace Clipboards
     private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     private System.Windows.Forms.SplitContainer splitContainer1;
     private System.Windows.Forms.SplitContainer splitContainer2;
-    private FavoritesListBox listBoxFavorites;
+    public FavoritesListBox listBoxFavorites;
     private System.Windows.Forms.ToolStripButton toolStripButtonExpandPreviewPan;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     private System.Windows.Forms.SplitContainer splitContainerPreviewPan;
@@ -543,7 +543,7 @@ namespace Clipboards
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
     private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
     private System.Windows.Forms.SplitContainer splitContainer3;
-    private MFUListBox listBoxMFU;
+    public MFUListBox listBoxMFU;
   }
 }
 

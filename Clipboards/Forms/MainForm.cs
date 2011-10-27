@@ -616,6 +616,17 @@ namespace Clipboards
         {
           listBoxClips.fClips.RemoveAt(Index);
           listBoxClips.Items.RemoveAt(Index);
+          if(listBoxClips.Items.Count != 0)
+          {
+            if (Index == 0)
+            {
+              listBoxClips.SelectedIndex = 0;
+            }
+            else if (Index -1 < listBoxClips.Items.Count)
+            {
+              listBoxClips.SelectedIndex = Index - 1;
+            }
+          }
         }
       }
       if (listBoxFavorites.Focused)
@@ -625,6 +636,17 @@ namespace Clipboards
         {
           listBoxFavorites.fFavorites.RemoveAt(Index);
           listBoxFavorites.Items.RemoveAt(Index);
+          if (listBoxFavorites.Items.Count != 0)
+          {
+            if (Index == 0)
+            {
+              listBoxFavorites.SelectedIndex = 0;
+            }
+            else if (Index - 1 < listBoxFavorites.Items.Count)
+            {
+              listBoxFavorites.SelectedIndex = Index - 1;
+            }
+          }
         }
       }
       if (listBoxMFU.Focused)
@@ -634,6 +656,17 @@ namespace Clipboards
         {
           listBoxMFU.fMFU.RemoveAt(Index);
           listBoxMFU.Items.RemoveAt(Index);
+          if (listBoxMFU.Items.Count != 0)
+          {
+            if (Index == 0)
+            {
+              listBoxMFU.SelectedIndex = 0;
+            }
+            else if (Index - 1 < listBoxMFU.Items.Count)
+            {
+              listBoxMFU.SelectedIndex = Index - 1;
+            }
+          }
         }
       }
     }

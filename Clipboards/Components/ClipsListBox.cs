@@ -183,14 +183,18 @@ namespace Clipboards.Components
     {
       if (e.Data.GetDataPresent(DataFormats.StringFormat))
       {
-        ClipItem Clip = new ClipItem((string)(e.Data.GetData(DataFormats.Text)), true);
-        // add the selected string to bottom of list
-        fClips.Add(Clip);
-        Items.Add(e.Data.GetData(DataFormats.Text));
-
-        /*if (fFromFavorites)
+        if (!fMainForm.fFromClips && !fMainForm.fFromFavorites && !fMainForm.fFromMFU)
         {
-          if (fIndexOfItemUnderMouseToDrop >= 0 && fIndexOfItemUnderMouseToDrop < listBoxFavorites.Items.Count)
+          ClipItem Clip = new ClipItem((string)(e.Data.GetData(DataFormats.Text)), true);
+          // add the selected string to bottom of list
+          fClips.Add(Clip);
+          Items.Add(e.Data.GetData(DataFormats.Text));
+        }
+
+        if (fMainForm.fFromFavorites)
+        {
+          int IndexItem = fMainForm.fIndexToDragFromFavorites;
+          if (IndexItem >= 0 && IndexItem < fMainForm.listBoxFavorites.Items.Count)
           {
             int Index = 0;
             try
@@ -202,12 +206,12 @@ namespace Clipboards.Components
               Console.WriteLine("Erreur de parsing");
             }
 
-            ClipItem Clip = fFavorites[Index];
+            ClipItem Clip = fMainForm.listBoxFavorites.fFavorites[Index];
             fClips.Add(Clip);
-            listBoxClips.Items.Add(fClips.Count.ToString());
+            Items.Add(fClips.Count.ToString());
           }
-          fFromFavorites = false;
-        }*/
+          fMainForm.fFromFavorites = false;
+        }
 
         //Refresh
         Refresh();
