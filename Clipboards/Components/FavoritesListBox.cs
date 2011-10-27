@@ -111,15 +111,18 @@ namespace Clipboards.Components
     {
       if (e.Data.GetDataPresent(DataFormats.StringFormat))
       {
-
-        ClipItem Clip = new ClipItem((string)(e.Data.GetData(DataFormats.Text)), true);
-        // add the selected string to bottom of list
-        fFavorites.Add(Clip);
-        Items.Add(e.Data.GetData(DataFormats.Text));
-
-        /*if (fFromClips)
+        if (!fMainForm.fFromClips && !fMainForm.fFromFavorites && !fMainForm.fFromMFU)
         {
-          if (fIndexToDragFromClips >= 0 && fIndexToDragFromClips < listBoxClips.Items.Count)
+          ClipItem Clip = new ClipItem((string)(e.Data.GetData(DataFormats.Text)), true);
+          // add the selected string to bottom of list
+          fFavorites.Add(Clip);
+          Items.Add(e.Data.GetData(DataFormats.Text));
+        }
+
+        if (fMainForm.fFromClips)
+        {
+          int IndexItem = fMainForm.fIndexToDragFromClips;
+          if (IndexItem >= 0 && IndexItem < fMainForm.listBoxClips.Items.Count)
           {
             int Index = 0;
             try
@@ -131,24 +134,25 @@ namespace Clipboards.Components
               Console.WriteLine("Erreur de parsing");
             }
 
-            ClipItem Clip = listBoxClips.fClips[Index];
+            ClipItem Clip = fMainForm.listBoxClips.fClips[Index];
             fFavorites.Add(Clip);
-            listBoxFavorites.Items.Add(fFavorites.Count.ToString());
+            Items.Add(fFavorites.Count.ToString());
           }
-          fFromClips = false;
-        }*/
-
-        /*if (fFromFavorites)
-        {
-          if (fIndexToDragFromClips >= 0 && fIndexToDragFromFavorites < listBoxFavorites.Items.Count)
-          {
-          }
-          fFromFavorites = false;
-        }*/
+          fMainForm.fFromClips = false;
+        }
 
         //Refresh
         Refresh();
       }
+
+#if ADVANCED_DRAG_AND_DROP
+      Point p = Cursor.Position;
+      Win32Point wp;
+      wp.x = p.X;
+      wp.y = p.Y;
+      IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
+      dropHelper.Drop((ComIDataObject)e.Data, ref wp, (int)e.Effect);
+#endif
     }
 
     private void FavDragEnter(object sender, DragEventArgs e)
